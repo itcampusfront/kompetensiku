@@ -1,0 +1,109 @@
+:root{
+	--color-1: #000E38;
+	--color-2: #00175c;
+	--shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+	--shadow-sm: 0 .125rem .25rem rgba(0,0,0,.075)!important;
+	--rounded-1: .5em;
+	--rounded-2: 1em;
+	--rounded-3: 1.5em;
+	--rounded-4: 2em;
+	--transition: .25s ease;
+}
+.color-theme-1{color: var(--color-1)}
+.btn-theme-1{background-color: var(--color-1); color: var(--bs-white)!important; transition: var(--transition)}
+.bg-theme-1{background-color: var(--color-1)}
+.bg-theme-2{background-color: var(--color-2)}
+.transition{transition: var(--transition)}
+.rounded-1{border-radius: .5em!important}
+.rounded-2{border-radius: 1em!important}
+.rounded-3{border-radius: 1.5em!important}
+.rounded-4{border-radius: 2em!important}
+html {scroll-behavior: smooth;}
+body {background-color: var(--bs-light)}
+a{text-decoration: none; transition: var(--transition)}
+a:hover{text-decoration: underline;}
+.navbar a:hover, a.btn:hover{text-decoration: none;}
+[v-cloak]{display: none}
+.w-fit{width: fit-content}
+.h-fit{height: fit-content}
+.card{border: 0; box-shadow: var(--shadow-sm); border-radius: var(--rounded-1)}
+.text-justify{text-align: justify;}
+
+.dropdown-menu{border: 0; box-shadow: var(--shadow-sm)}
+.dropdown-mobile .dropdown-toggle::after{display: none;}
+.search-bar .input-group-text,
+.search-bar .form-control{border-radius: var(--rounded-3)}
+.megamenu-li{position: static}
+.megamenu{position: absolute; width: 100%; left: 0; right: 0; padding: 15px; top: 3.5em;}
+
+.section-carousel .carousel-indicators [data-bs-target]{width: 10px; height: 10px; border: unset; border-radius: var(--rounded-3)}
+.section-carousel .carousel-caption{height: 100%; left: 0; right: 0; bottom: 0; padding: 0 15px; background: rgb(0,0,0);
+background: linear-gradient(155deg, rgba(0,0,0,0.4) 20%, rgba(0,14,56,0.8) 100%)}
+.section-intro .content-intro:hover .wrap-img{animation: rotate-vert-center 0.5s cubic-bezier(0.455, 0.030, 0.515, 0.955) both;}
+
+.breadcrumb .breadcrumb-item a{color: var(--bs-gray); text-decoration: none;}
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link{background-color: var(--color-1)}
+
+.page-link{color: var(--color-1)}
+.page-link:hover{color: var(--color-1)}
+.page-item.active .page-link{background-color: var(--color-1); border-color: var(--color-1)}
+/* animation */
+@keyframes rotate-vert-center{0%{transform:rotateY(0)}100%{transform:rotateY(360deg)}}
+
+/* max */
+/* Small devices (landscape phones, less than 768px)*/
+@media (max-width: 767.98px) {
+
+}
+
+/* Medium devices (tablets, less than 992px)*/
+@media (max-width: 991.98px) {
+
+}
+
+/* Large devices (desktops, less than 1200px)*/
+@media (max-width: 1199.98px) {
+
+}
+
+
+/* min */
+/* Small devices (landscape phones, 576px and up)*/
+@media (min-width: 576px) {
+
+}
+
+/* Medium devices (tablets, 768px and up)*/
+@media (min-width: 768px) {
+	.rounded-md-1{border-radius: .5em!important}
+	.rounded-md-2{border-radius: 1em!important}
+	.rounded-md-3{border-radius: 1.5em!important}
+	.rounded-md-4{border-radius: 2em!important}
+}
+
+/* Large devices (desktops, 992px and up)*/
+@media (min-width: 992px) {
+
+}
+
+Kontent
+
+- Program Pelatihan dan Sertifikasi Profesi Kepelatihan
+Klaster Pelaksanaan Pelatihan Tatap Muka
+Kualifikasi 3 Junior Instruktur
+Kualifikasi 4 Instruktur
+
+- Program Pelatihan dan Sertifikasi Praktisi Sumber Daya Manusia
+Staf Kompensasi dan Benefit
+Supervisor Pengadaan, Penyeleksian, dan Penempatan Sumber Daya Manusia (SPPPSDM)
+Manajer Sumber Daya Manusia (MSDM)
+
+- Program Pelatihan dan Sertifikasi Profesi UMKM
+Pengelola UMKM
+Pendamping UMKM
+Fasilitator Diklat UMKM
+
+- Program Pelatihan dan Sertifikasi Profesi Teknologi Digital
+Digital Marketing
+Operator Komputer Muda
+Desainer Grafis Muda
