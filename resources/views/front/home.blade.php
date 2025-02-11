@@ -110,7 +110,7 @@
 <section class="section-program">
 	<div class="container my-5">
 		<div class="heading mb-3">
-			<h5>Program</h5>
+			<h2>Program</h2>
 			<div id="typed-strings">
 				<p>Program Pelatihan dan Sertifikasi <span class="fw-bold">Profesi Kepelatihan</span></p>
 				<p>Program Pelatihan dan Sertifikasi <span class="fw-bold">Praktisi Sumber Daya Manusia</span></p>
@@ -157,10 +157,31 @@
 		</div>
 	</div>
 </section>
+@if(isset($g))
+<section>
+	<div class="container">
+		<div class="heading">
+			<h2>Cek Kegiatan Kami</h2>
+		</div>
+		<div class="row align-items-center justify-content-center">
+			@foreach ($g as $gs)
+				<div class="col-12 col-sm-6 col-md-4 g-1">
+					<div class="card">
+						<div class="card-body">
+							<img class="img-fluid rounded" src="{{ file_exists(public_path('assets/images/dokumentasi/' . $gs->gambar)) ? asset('assets/images/dokumentasi/' . $gs->gambar) : asset('assets/images/default/program.png') }}" alt="{{ $gs->judul_gambar }}">
+							<h5 class="text-center mt-2">{{ $gs->judul_gambar }}</h5>
+						</div>
+					</div>
+				</div>
+			@endforeach
+		</div>
+	</div>
+</section>
+@endif
 <section class="section-partner">
 	<div class="container my-5">
 		<div class="heading">
-			<h5>Mitra</h5>
+			<h2>Mitra</h3>
 			<p>Mitra Kami</p>
 		</div>
 		<div class="card border-0 shadow-sm rounded-1">
@@ -181,7 +202,7 @@
 <section class="section-artikel">
 	<div class="container my-5">
 		<div class="heading">
-			<h5>Artikel</h5>
+			<h2>Artikel</h2>
 		</div>
         <div class="row">
         	@if(count($artikel)>0)

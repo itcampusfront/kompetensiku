@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Campusdigital\CampusCMS\Models\Blog;
 use Campusdigital\CampusCMS\Models\Mitra;
 use Campusdigital\CampusCMS\Models\Slider;
+use Campusdigital\CampusCMS\Models\Gallery;
 use Campusdigital\CampusCMS\Models\Program;
 
 class HomeController extends Controller
@@ -33,9 +34,11 @@ class HomeController extends Controller
         // Data artikel terbaru
         $artikel = Blog::join('users','blog.author','=','users.id_user')->join('kategori_artikel','blog.blog_kategori','=','kategori_artikel.id_ka')->orderBy('blog_at','desc')->limit(3)->get();
 
+        $gallery = Gallery::orderBy('id','desc')->limit(3)->get();
         // View
         return view('front.home', [
             'artikel' => $artikel,
+            'g' => $gallery,
             'mitra' => $mitra,
             'program' => $program,
             'slider' => $slider,
