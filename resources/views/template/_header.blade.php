@@ -49,6 +49,9 @@
         <li class="nav-item">
           <a class="nav-link fw-bold {{ is_int(strpos(Request::url(), route('site.halaman.detail', ['permalink' => 'tentang-kami']))) ? 'active' : '' }}" href="{{ route('site.halaman.detail', ['permalink' => 'tentang-kami']) }}">Tentang&nbsp;Kami</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link fw-bold {{ is_int(strpos(Request::url(), route('site.artikel.index'))) ? 'active' : '' }}" href="{{ route('site.artikel.index') }}">Artikel</a>
+        </li>
         @if(Auth::guest())
         <li class="nav-item d-none d-lg-block">
             <a class="nav-link btn btn-theme-1 btn-sm px-3 ms-2 rounded-3" href="{{ route('auth.login', ['ref' => isset($_GET) && isset($_GET['ref']) ? $_GET['ref'] : null]) }}">Masuk&nbsp;|&nbsp;Daftar</a>
