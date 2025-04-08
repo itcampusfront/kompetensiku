@@ -26,16 +26,9 @@
                     <div class="row">
                         <div class="col-lg-8 order-2 order-lg-1 text-white">
                             <span class="badge bg-theme-1 mb-3 p-2">{{ $program->kategori }}</span>
-                            <h2 class="mb-3">{{ $program->program_title }}</h2>
+                            <h2 class="mb-3" id="program_name">{{ $program->program_title }}</h2>
                             {{-- <p>Oleh : {{ $program->nama_user }}<br> Terakhir diperbarui
                                 {{ date('d/m/Y', strtotime($program->program_at)) }}</p> --}}
-                            <div class="card bg-light shadow-sm m-3">
-                                <div class="card-body">
-
-                                    <s style="font-size:24px;color: green">{{ $price[0] }}</s>
-                                    <h1 style="color:red">{{ $price[1] }}</h1>
-                                </div>
-                            </div>
                             <a href="{{ route('auth.login') }}" class="btn btn-light">Ambil Pelatihan</a>
                         </div>
                         <div class="col-lg-4 order-1 order-lg-2 px-0 px-md-3">
@@ -81,6 +74,50 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="heading mt-3">
+                            <h5 class="font-weight-bold">Harga Pelatihan </h5>
+                        </div>
+                        <div class="card bg-light shadow-sm m-3">
+                          <div class="card-bod text-center p-5">
+                              <s
+                                  style="font-size:24px;color: green">{{ 'Rp ' . number_format($price[0], 0, ',', '.') }}</s>
+                              <h1 style="color:red"><u>{{ 'Rp ' . number_format($price[1], 0, ',', '.') }}</u></h1>
+                          </div>
+                      </div>
+                        <div class="container">
+                            <div class="form-container shadow">
+                                <h5 class="form-title mb-4">Daftar Kelas, Isi Form Dibawah ⬇️</h5>
+                                <form id="whatsappForm">
+                                    <div class="mb-3">
+                                        <label for="nama" class="form-label">*Nama</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                            <input type="text" class="form-control" id="nama"
+                                                placeholder="Nama Anda" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">*Email</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                            <input type="email" class="form-control" id="email"
+                                                placeholder="Email Anda" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="hp" class="form-label">*Nomor Handphone</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                                            <input type="text" class="form-control" id="hp" placeholder="Nomor HP"
+                                                required>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-yellow w-100">Daftar Via WhatssApp</button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-lg-4">
                         <h5 class="widget_title">Pelatihan Lainnya</h5>
@@ -107,4 +144,51 @@
 @endsection
 @section('css-extra')
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <style>
+        .form-container {
+            max-width: 100%;
+            margin: 50px auto;
+            padding: 30px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+
+        .form-title {
+            text-align: center;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .btn-yellow {
+            background-color: green;
+            color: #fff;
+            font-weight: bold;
+        }
+    </style>
+@endsection
+
+@section('js-extra')
+    <script>
+        document.getElementById("hp").addEventListener("input", function(e) {
+            this.value = this.value.replace(/\D/g, ""); // Hapus semua non-digit
+        });
+        document.getElementById("whatsappForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const nama = document.getElementById("nama").value;
+            const email = document.getElementById("email").value;
+            const hp = document.getElementById("hp").value;
+            const program_name = document.getElementById("program_name").innerHTML;
+
+            const pesan = `Halo Admin Kompetensiku, Saya, %0A` +
+                `Nama: ${nama}%0A ` +
+                `Email: ${email}%0A ` +
+                `Nomor HP: ${hp}%0A%0A ` +
+                `ingin Mendaftarkan diri untuk mengikuti program ${program_name}`;
+
+            const noWa = "62816343741";
+            const url = `https://wa.me/${noWa}?text=${pesan}`;
+            window.open(url, "_blank");
+        });
+    </script>
+
 @endsection
