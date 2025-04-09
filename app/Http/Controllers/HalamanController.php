@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Campusdigital\CampusCMS\Models\Gallery;
 use Campusdigital\CampusCMS\Models\Halaman;
 
 class HalamanController extends Controller
@@ -34,5 +35,13 @@ class HalamanController extends Controller
                 'halaman' => $halaman,
             ]);
         }
+    }
+
+    public function gallery(Request $request){
+        // Referral
+        referral($request->query('ref'), 'site.halaman.gallery');
+        $gallery = Gallery::paginate(8);
+        // View
+        return view('front.gallery.index', compact('gallery'));
     }
 }

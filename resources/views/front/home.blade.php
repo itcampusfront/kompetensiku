@@ -160,8 +160,9 @@
 @if(isset($g))
 <section>
 	<div class="container">
-		<div class="heading">
+		<div class="heading d-flex align-items-center justify-content-between">
 			<h2>Cek Kegiatan Kami</h2>
+			<a href="{{ route('site.halaman.gallery') }}" class="btn btn-theme-1"> Semua Kegiatan</a>
 		</div>
 		<div class="row align-items-center justify-content-center">
 			@foreach ($g as $gs)

@@ -47,4 +47,5 @@ Route::get('/mentor', [MentorController::class, 'index'])->name('site.mentor.ind
 
 // Halaman
 Route::get('/{permalink}', [HalamanController::class,'detail'])->name('site.halaman.detail');
+Route::get('/page/gallery', [HalamanController::class,'gallery'])->name('site.halaman.gallery');
 
