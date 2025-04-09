@@ -5,6 +5,8 @@
     $program_materi = json_decode($program->program_materi);
     $materi_desk = json_decode($program->materi_desk);
     $price = json_decode($program->price);
+    $info_profesi = json_decode($program->info_profesi);
+
 @endphp
 {{-- @dd($program) --}}
 @section('content')
@@ -43,47 +45,83 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 mb-3 mb-lg-0">
-                        @include('front.program.part_program', [
-                            'title' => 'Ringkasan',
-                            'content' => html_entity_decode($program->konten),
-                        ])
-                        @include('front.program.part_program', [
-                            'title' => 'Manfaat Program',
-                            'content' => html_entity_decode($program->program_manfaat),
-                        ])
-
-                        <div class="heading mt-3">
-                            <h5 class="font-weight-bold">Materi </h5>
+                        <div class="div-konten">
+                            @include('front.program.part_program', [
+                                'title' => 'Ringkasan',
+                                'content' => html_entity_decode($program->konten),
+                            ])
                         </div>
-                        <div class="card rounded-2 border-0 shadow-sm">
-                            <div class="container p-3">
-                                <div class="row">
-                                    @foreach ($program_materi as $index => $judul)
-                                        <div class="col-12 col-md-6 g-2 d-flex">
-                                            <div class="card mb-2 w-100 h-100 d-flex flex-column">
-                                                <div class="card-header text-center bg-white">
-                                                    <b>{{ $judul }}</b>
+
+                        <div class="div-manfaat">
+                            @include('front.program.part_program', [
+                                'title' => 'Manfaat Program',
+                                'content' => html_entity_decode($program->program_manfaat),
+                            ])
+                        </div>
+                        @if ($program_materi != null)
+
+                            <div class="div-materi">
+                                <div class="heading mt-3">
+                                    <h5 class="font-weight-bold">Materi </h5>
+                                </div>
+                                <div class="card rounded-2 border-0 shadow-sm">
+                                    <div class="container p-3">
+                                        <div class="row">
+                                            @foreach ($program_materi as $index => $judul)
+                                                <div class="col-12 col-md-6 g-2 d-flex">
+                                                    <div class="card mb-2 w-100 h-100 d-flex flex-column">
+                                                        <div class="card-header text-center bg-white">
+                                                            <b>{{ $judul }}</b>
+                                                        </div>
+                                                        <div
+                                                            class="card-body p-4 d-flex align-items-center justify-content-center text-center">
+                                                            {{ $materi_desk[$index] }}
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div
-                                                    class="card-body p-4 d-flex align-items-center justify-content-center text-center">
-                                                    {{ $materi_desk[$index] }}
-                                                </div>
-                                            </div>
+                                            @endforeach
                                         </div>
-                                    @endforeach
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="heading mt-3">
-                            <h5 class="font-weight-bold">Harga Pelatihan </h5>
-                        </div>
-                        <div class="card bg-light shadow-sm m-3">
-                          <div class="card-bod text-center p-5">
-                              <s
-                                  style="font-size:24px;color: green">{{ 'Rp ' . number_format($price[0], 0, ',', '.') }}</s>
-                              <h1 style="color:red"><u>{{ 'Rp ' . number_format($price[1], 0, ',', '.') }}</u></h1>
-                          </div>
-                      </div>
+                        @endif  
+                        @if ($price != null)
+                            <div class="div-harga">
+                                <div class="heading mt-3">
+                                    <h5 class="font-weight-bold">Harga Pelatihan </h5>
+                                </div>
+                                <div class="card shadow-sm">
+                                    <div class="card-bod text-center p-5">
+                                        <span style="font-size: 24px">Harga Normal : <s
+                                                style="font-size:24px;color: green">{{ 'Rp ' . number_format($price[0], 0, ',', '.') }}</s></span>
+                                        <h1 class="bg-danger text-white rounded p-3 mt-2"> Harga Diskon :
+                                            <u>{{ 'Rp ' . number_format($price[1], 0, ',', '.') }}</u></h1>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                        @if ($info_profesi != null)
+
+                            <div class="div-profesi">
+                                <div class="heading mt-3">
+                                    <h5 class="font-weight-bold">Profesi </h5>
+                                </div>
+                                <div class="card rounded-2 border-0 shadow-sm">
+                                    <div class="container">
+                                        <div class="row ">
+                                            @foreach ($info_profesi as $profesi)
+                                                <div class="col-2 d-flex justify-content-center align-items-center g-2 m-2">
+                                                    <img class="img-fluid rounded"
+                                                        style="max-height: 80px; max-width: 80px;"
+                                                        src="{{ asset('assets/images/program/icon-profesi/' . $profesi->icon_profesi) }}"
+                                                        alt="icon">
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                         <div class="container">
                             <div class="form-container shadow">
                                 <h5 class="form-title mb-4">Daftar Kelas, Isi Form Dibawah ⬇️</h5>
