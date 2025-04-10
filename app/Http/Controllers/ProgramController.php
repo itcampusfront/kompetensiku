@@ -48,11 +48,12 @@ class ProgramController extends Controller
 
         // Program lainnya
         $program_lainnya = Program::join('users','program.author','=','users.id_user')->join('kategori_program','program.program_kategori','=','kategori_program.id_kp')->orderBy('program_at', 'desc')->limit(5)->get();
-        $pelatihan = Pelatihan::where('id_program', '=', $program->id_program)->get();
+        $pelatihan = Pelatihan::where('id_program', '=', $program->id_program)->where('status',1)->get();
         // View
         return view('front.program.detail', [
             'program' => $program,
             'program_lainnya' => $program_lainnya,
+            'pelatihan' => $pelatihan
         ]);
     }
 }
