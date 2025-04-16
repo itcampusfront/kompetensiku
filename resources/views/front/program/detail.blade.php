@@ -77,10 +77,10 @@
                                             @foreach ($program_materi as $index => $judul)
                                                 <div class="col-12 col-md-6 g-2 d-flex">
                                                     <div class="card mb-2 w-100 h-100 d-flex flex-column">
-                                                        <div class="card-header text-center bg-white">
+                                                        <div class="card-header text-white text-center bg-success">
                                                             <b>{{ $judul }}</b>
                                                         </div>
-                                                        <div
+                                                        <div style="font-size:20px"
                                                             class="card-body p-4 d-flex align-items-center justify-content-center text-center">
                                                             {{ $materi_desk[$index] }}
                                                         </div>
@@ -142,11 +142,11 @@
                         @endif
                     </div>
                 </div>
-                <div class="row mt-3">
-                    <div class="col-12 col-md-6 order-1">
-                        <h2 style="color:red">Segera Daftarkan Dirimu</h2>
+                <div class="row mt-3 g-1">
+                    <div class="col-12 col-lg-6 order-1">
+                        {{-- <h2 style="color:red">Segera Daftarkan Dirimu</h2> --}}
                         <div class="form-container shadow">
-                            <h5 class="form-title mb-4">Daftar Kelas, Isi Form Dibawah ⬇️</h5>
+                            <h5 class="form-title mb-4">Daftar Kelas atau Pelatihan?, Isi Form Dibawah ⬇️</h5>
                             <form id="whatsappForm">
                                 <div class="mb-3">
                                     <label for="nama" class="form-label">*Nama</label>
@@ -175,56 +175,88 @@
                                     <label for="hp" class="form-label">*Nama Program</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="bi bi-telephone"></i></span>
-                                        <input type="text" class="form-control" id="name_program" placeholder="Program Batch 30" required>
+                                        <input type="text" class="form-control" id="name_program" placeholder="Program Batch 30 atau Pelatihan Reguler" required>
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-yellow w-100">Daftar Via WhatssApp</button>
                             </form>
                         </div>
                     </div>
-                    <div class="col-12 col-md-6 order-0">
-                        <div class="card mb-3">
+                    <div class="col-12 col-lg-6 order-0">
+                        <div class="card">
                             <div class="card-header">
                                 <h5 class="widget_title">Event Pelatihan Berjalan</h5>
                             </div>
                             <div class="card-body">
-                                @foreach ($pelatihan as $index => $data)
-                                    <div class="card mb-4">
-                                            <div class="card-body">
-                                                <div class="mb-3">
-                                                    <!-- Countdown box dengan ID dan data-date -->
-                                                    <div
-                                                        class="countdown-box bg-danger text-white p-3 rounded mb-3 text-center shadow-sm">
-                                                        <div id="countdown-{{ $index }}"
-                                                            class="countdown-time fw-bold"
-                                                            data-date="{{ \Carbon\Carbon::parse($data->tanggal_pelatihan_to)->toIso8601String() }}">
-                                                            Memuat...
+                                @if($pelatihan != null)
+                                    @foreach ($pelatihan as $index => $data)
+                                        <div class="card mb-4">
+                                                <div class="card-body">
+                                                    <div class="mb-3">
+                                                        <!-- Countdown box dengan ID dan data-date -->
+                                                        <div
+                                                            class="countdown-box bg-danger text-white p-3 rounded mb-3 text-center shadow-sm">
+                                                            <div id="countdown-{{ $index }}"
+                                                                class="countdown-time fw-bold"
+                                                                data-date="{{ \Carbon\Carbon::parse($data->tanggal_pelatihan_to)->toIso8601String() }}">
+                                                                Memuat...
+                                                            </div>
                                                         </div>
-                                                    </div>
 
-                                                    <div class="d-flex">
-                                                        <img class="rounded w-50 mb-2"
-                                                            src="{{ asset('assets/images/pelatihan/' . $data->gambar_pelatihan) }}"
-                                                            alt="Gambar Pelatihan {{ $data->nama_pelatihan }}">
-                                                        <div class="text">
+                                                        <div class="row">
+                                                            <div class="col-12 col-lg-6">
+                                                                <img class="img-fluid rounded" style="max-height: 300px;width:100%;object-fit:cover "
+                                                                    src="{{ file_exists(public_path('assets/images/pelatihan/' . $data->gambar_pelatihan)) ? asset('assets/images/pelatihan/' . $data->gambar_pelatihan) : asset('assets/images/default/program.png') }}" 
+                                                                    alt="Gambar Pelatihan {{ $data->nama_pelatihan }}">
 
-                                                            <p class="fs-4 fw-bold"> {{ strtoupper($data->nama_pelatihan) }} </p>
-                                                            <p class="text-muted"><i class="fa fa-map-marker" aria-hidden="true"></i> {{ strtoupper($data->tempat_pelatihan) }}</p>
-                                                            <p class="text-muted"><i class="fa fa-clock" aria-hidden="true"></i> <span style="color:red">{{ $data->total_jam_pelatihan }} Jam </span>PERTEMUAN</p>
-                                                            <p>
-                                                                @if(Auth::guest())
-                                                                <a class="btn btn-theme-1" href="{{ route('auth.register') }}">Daftar / Login</a>
-                                                                @else
-                                                                <a target="__blank" class="btn btn-theme-1" href="/member/pelatihan/detail/{{ $data->id_pelatihan }}">Daftar Melalui Sistem</a>
-                                                                @endif
-                                                            </p>
+                                                            </div>
 
+                                                            <div class="text col-12 col-lg-6">
+
+                                                                <p class="fs-4 fw-bold"> {{ strtoupper($data->nama_pelatihan) }} </p>
+                                                                <p class="text-muted"><i class="fa fa-map-marker" aria-hidden="true"></i> {{ strtoupper($data->tempat_pelatihan) }}</p>
+                                                                <p class="text-muted"><i class="fa fa-clock" aria-hidden="true"></i> <span style="color:red">{{ $data->total_jam_pelatihan }} Jam </span>PERTEMUAN</p>
+                                                                <p>
+                                                                    @if(Auth::guest())
+                                                                    <a class="btn btn-theme-1" href="{{ route('auth.register') }}">Daftar / Login</a>
+                                                                    @else
+                                                                    <a target="__blank" class="btn btn-theme-1" href="/member/pelatihan/detail/{{ $data->id_pelatihan }}">Daftar Melalui Sistem</a>
+                                                                    @endif
+                                                                </p>
+
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
+                                        </div>
+                                    @endforeach
+                                @else
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <div class="mb-3">
+        
+                                            <div class="d-flex">
+                                                <img class="rounded mb-2" 
+                                                    src="{{ asset('assets/images/pelatihan/' . $data->gambar_pelatihan) }}"
+                                                    alt="Gambar Pelatihan {{ $data->nama_pelatihan }}">
+                                                <div class="text">
+                                                    <p class="fs-4 fw-bold"> {{ strtoupper($data->nama_pelatihan) }} </p>
+                                                    <p class="text-muted"><i class="fa fa-map-marker" aria-hidden="true"></i> {{ strtoupper($data->tempat_pelatihan) }}</p>
+                                                    <p class="text-muted"><i class="fa fa-clock" aria-hidden="true"></i> <span style="color:red">{{ $data->total_jam_pelatihan }} Jam </span>PERTEMUAN</p>
+                                                    <p>
+                                                        @if(Auth::guest())
+                                                        <a class="btn btn-theme-1" href="{{ route('auth.register') }}">Daftar / Login</a>
+                                                        @else
+                                                        <a target="__blank" class="btn btn-theme-1" href="/member/pelatihan/detail/{{ $data->id_pelatihan }}">Daftar Melalui Sistem</a>
+                                                        @endif
+                                                    </p>
+
+                                                </div>
                                             </div>
+                                        </div>
                                     </div>
-                                @endforeach
+                                </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -238,7 +270,8 @@
     <style>
         .form-container {
             max-width: 100%;
-            margin: 50px auto;
+            height: 100%;
+            /* margin: 50px auto; */
             padding: 30px;
             border: 1px solid #ddd;
             border-radius: 10px;

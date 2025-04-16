@@ -25,7 +25,8 @@
         </div>
         
         <nav class="acara-pagination justify-content-center d-flex">
-            {!! $gallery->links() !!}
+            {{ $gallery->appends(request()->query())->links() }}
+
         </nav>
 	</div>
 </section>
