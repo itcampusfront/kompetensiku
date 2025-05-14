@@ -18,7 +18,7 @@ class HalamanController extends Controller
     public function detail(Request $request, $permalink)
     {
         // Referral
-        referral($request->query('ref'), 'site.halaman.detail', ['permalink' => $permalink]);
+        // referral($request->query('ref'), 'site.halaman.detail', ['permalink' => $permalink]);
 
     	// Data halaman
     	$halaman = Halaman::where('halaman_permalink','=',$permalink)->firstOrFail();
@@ -39,7 +39,7 @@ class HalamanController extends Controller
 
     public function gallery(Request $request){
         // Referral
-        referral($request->query('ref'), 'site.halaman.gallery');
+        // referral($request->query('ref'), 'site.halaman.gallery');
         $gallery = Gallery::paginate(8);
         // View
         return view('front.gallery.index', compact('gallery'));

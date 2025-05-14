@@ -16,7 +16,7 @@ class ProgramController extends Controller
     public function index(Request $request)
     {
         // Referral
-        referral($request->query('ref'), 'site.program.index');
+        // referral($request->query('ref'), 'site.program.index');
 
         // Data program
         $program_bnsp = Program::join('users','program.author','=','users.id_user')->join('kategori_program','program.program_kategori','=','kategori_program.id_kp')->where('kategori_program.slug','=','bnsp')->orderBy('program_at', 'desc')->get();
@@ -41,7 +41,7 @@ class ProgramController extends Controller
     public function detail(Request $request, $permalink)
     {		
         // Referral
-        referral($request->query('ref'), 'site.program.detail', ['permalink' => $permalink]);
+        // referral($request->query('ref'), 'site.program.detail', ['permalink' => $permalink]);
 
         // Data program
         $program = Program::join('users','program.author','=','users.id_user')->join('kategori_program','program.program_kategori','=','kategori_program.id_kp')->where('program_permalink','=',$permalink)->firstOrFail();

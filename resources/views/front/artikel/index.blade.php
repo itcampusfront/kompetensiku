@@ -13,13 +13,13 @@
 	</nav>
 </div>
 <section>
-	<div class="container">
+	<div class="container-lg">
         <div class="row">
             @foreach($artikel as $data)
-            <div class="col-6 col-md-4 col-lg-3 mb-3">
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-3 d-flex align-items-stretch">
 				<div class="card border-0 shadow-sm rounded-1">
                     <a href="{{ route('site.artikel.detail', ['permalink' => $data->blog_permalink]) }}">
-                        <img class="card-img-top rounded-1" src="{{ image('assets/images/blog/'.$data->blog_gambar, 'blog') }}" alt="thumbnail">
+                        <img class="card-img-top rounded-1" style="height: 200px;object-fit: cover;" src="{{ image('assets/images/blog/'.$data->blog_gambar, 'blog') }}" alt="thumbnail">
                     </a>
                 	<div class="card-body">
 	                    <a class="text-decoration-none text-body" href="{{ route('site.artikel.detail', ['permalink' => $data->blog_permalink]) }}">
@@ -36,7 +36,7 @@
         </div>
         
         <nav class="blog-pagination justify-content-center d-flex">
-            {!! $artikel->links() !!}
+            {{ $artikel->appends(request()->query())->links() }}
         </nav>
 	</div>
 </section>

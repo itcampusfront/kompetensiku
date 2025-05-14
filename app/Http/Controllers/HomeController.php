@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Campusdigital\CampusCMS\Models\Blog;
 use Campusdigital\CampusCMS\Models\Mitra;
+use Illuminate\Support\Facades\Validator;
 use Campusdigital\CampusCMS\Models\Slider;
 use Campusdigital\CampusCMS\Models\Gallery;
 use Campusdigital\CampusCMS\Models\Program;
@@ -20,7 +21,7 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         // Referral
-        referral($request->query('ref'), 'site.home');
+        // referral($request->query('ref'), 'site.home');
 
         // Data slider
         $slider = Slider::where('status_slider','=',1)->orderBy('order_slider','asc')->get();
@@ -53,6 +54,15 @@ class HomeController extends Controller
     public function search(Request $request)
     {
         // Keyword dan kategori
+        $validator = Validator::make($request->query(), [
+            'q' => 'nullable|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+            ], 422);
+        }
         $q = $request->query('q');
 
         // Data artikel

@@ -15,7 +15,7 @@ class AcaraController extends Controller
     public function index(Request $request)
     {
         // Referral
-        referral($request->query('ref'), 'site.acara.index');
+        // referral($request->query('ref'), 'site.acara.index');
 
         // Data acara
         $acara = Acara::join('kategori_acara','acara.kategori_acara','=','kategori_acara.id_ka')->orderBy('tanggal_acara_from','desc')->paginate(12);
@@ -36,7 +36,7 @@ class AcaraController extends Controller
     public function detail(Request $request, $permalink)
     {		
         // Referral
-        referral($request->query('ref'), 'site.acara.detail', ['permalink' => $permalink]);
+        // referral($request->query('ref'), 'site.acara.detail', ['permalink' => $permalink]);
 
         // Data acara
         $acara = Acara::join('kategori_acara','acara.kategori_acara','=','kategori_acara.id_ka')->where('id_acara','=',$permalink)->firstOrFail();

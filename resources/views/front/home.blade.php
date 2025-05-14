@@ -208,7 +208,7 @@
         <div class="row">
         	@if(count($artikel)>0)
 			@foreach($artikel as $data)
-            <div class="col-6 col-md-4 col-lg-3 mb-3">
+            <div class="col-6 col-md-4 col-lg-3 mb-3 d-flex align-items-stretch">
 				<div class="card border-0 shadow-sm rounded-1">
                     <a href="/artikel/{{ $data->blog_permalink }}">
                         <img class="card-img-top rounded-1" src="{{ image('assets/images/blog/'.$data->blog_gambar, 'blog') }}" alt="thumbnail">

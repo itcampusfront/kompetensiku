@@ -15,7 +15,7 @@ class MentorController extends Controller
     public function index(Request $request)
     {
         // Referral
-        referral($request->query('ref'), 'site.mentor.index');
+        // referral($request->query('ref'), 'site.mentor.index');
 
         $mentor = Mentor::orderBy('order_mentor', 'asc')->get();
 

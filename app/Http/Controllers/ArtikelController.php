@@ -19,7 +19,7 @@ class ArtikelController extends Controller
     public function index(Request $request)
     {
         // Referral
-        referral($request->query('ref'), 'site.artikel.index');
+        // referral($request->query('ref'), 'site.artikel.index');
 
         // Data artikel
         $artikel = Blog::join('users','blog.author','=','users.id_user')->join('kategori_artikel','blog.blog_kategori','=','kategori_artikel.id_ka')->orderBy('blog_at','desc')->paginate(12);
@@ -40,7 +40,7 @@ class ArtikelController extends Controller
     public function detail(Request $request, $permalink)
     {		
         // Referral
-        referral($request->query('ref'), 'site.artikel.detail', ['permalink' => $permalink]);
+        // referral($request->query('ref'), 'site.artikel.detail', ['permalink' => $permalink]);
 
         // Data artikel
         $artikel = Blog::join('users','blog.author','=','users.id_user')->join('kategori_artikel','blog.blog_kategori','=','kategori_artikel.id_ka')->where('blog_permalink','=',$permalink)->firstOrFail();
@@ -82,7 +82,7 @@ class ArtikelController extends Controller
     public function category(Request $request, $category)
     {
         // Referral
-        referral($request->query('ref'), 'site.artikel.category', ['category' => $category]);
+        // referral($request->query('ref'), 'site.artikel.category', ['category' => $category]);
 
         // Data kategori
         $kategori = KategoriArtikel::where('slug','=',$category)->firstOrFail();
@@ -107,7 +107,7 @@ class ArtikelController extends Controller
     public function tag(Request $request, $tag)
     {
         // Referral
-        referral($request->query('ref'), 'site.artikel.tag', ['tag' => $tag]);
+        // referral($request->query('ref'), 'site.artikel.tag', ['tag' => $tag]);
 
         // Data tag
         $tag = Tag::where('slug','=',$tag)->firstOrFail();
