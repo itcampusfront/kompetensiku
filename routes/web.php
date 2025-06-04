@@ -41,6 +41,8 @@ Route::get('/artikel', [ArtikelController::class, 'index'])->name('site.artikel.
 Route::get('/artikel/{permalink}', [ArtikelController::class, 'detail'])->name('site.artikel.detail');
 Route::get('/artikel/kategori/{category}', [ArtikelController::class, 'category'])->name('site.artikel.category');
 Route::get('/artikel/tag/{tag}', [ArtikelController::class, 'tag'])->name('site.artikel.tag');
+//sitemap
+Route::get('/seo/sitemap.xml', [ArtikelController::class, 'generate'])->name('site.artikel.sitemaps');
 
 // Program
 Route::get('/mentor', [MentorController::class, 'index'])->name('site.mentor.index');

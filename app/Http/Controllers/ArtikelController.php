@@ -8,6 +8,9 @@ use Campusdigital\CampusCMS\Models\Tag;
 use Campusdigital\CampusCMS\Models\Blog;
 use Campusdigital\CampusCMS\Models\Komentar;
 use Campusdigital\CampusCMS\Models\KategoriArtikel;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\URL;
+use Carbon\Carbon;
 
 class ArtikelController extends Controller
 {
@@ -134,5 +137,33 @@ class ArtikelController extends Controller
             'artikel' => $artikel,
             'tag' => $tag,
         ]);
+    }
+
+    public function generate()
+    {
+        $urls = [];
+
+        // Static URLs
+        $urls[] = [
+            'loc' => URL::to('/'),
+            'lastmod' => now()->toAtomString(),
+            'changefreq' => 'daily',
+            'priority' => '1.0'
+        ];
+
+        // Dynamic URLs from Posts
+        foreach (Blog::all() as $post) {
+            $urls[] = [
+                'loc' => URL::to('/artikel/' . $post->blog_permalink),
+                'lastmod' => Carbon::parse($post->blog_updated, 'Asia/Jakarta')->toAtomString(),
+                'changefreq' => 'weekly',
+                'priority' => '0.9'
+            ];
+        }
+
+        // Build XML
+        $xml = view('front.artikel.sitemap', compact('urls'))->render();
+
+        return Response::make($xml, 200)->header('Content-Type', 'application/xml');
     }
 }

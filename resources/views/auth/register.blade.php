@@ -3,14 +3,11 @@
 @section('title', 'Daftar | ')
 
 @section('content')
-
     <section class="my-5">
         <div class="container">
             <div class="row">
-
                 <div class="col-lg-12">
                     <div class="info-text">
-                        <!--<h4 class="mb-4">Registrasi</h4>-->
                         <div class="card rounded-1 shadow-sm border-0">
                             <div class="card-header mx-4 bg-transparent text-center py-4 px-0">
                                 <img width="200" class="mb-3"
@@ -20,9 +17,6 @@
                                     registrasi di bawah ini 🔔</p>
                             </div>
                             <div class="card-body">
-                                <!-- <div class="text-center mb-3">
-                            <a href="{{ asset('assets/docs/TUTORIAL PENDAFTARAN PERSONALITY TALK.pdf') }}" target="_blank" class="btn btn-theme-1 rounded-1"><i class="fa fa-download mr-2"></i> Download Tutorial Pendaftaran Member {{ setting('site.name') }}</a>
-                            </div> -->
                                 <form method="post" action="{{ route('auth.postregister') }}">
                                     {{ csrf_field() }}
                                     <input type="hidden" name="ref" value="{{ $_GET['ref'] }}">
@@ -57,9 +51,15 @@
                                         <label class="col-md-2 col-form-label">Tanggal Lahir <span
                                                 class="text-danger">*</span></label>
                                         <div class="col-md-10">
-                                            <input type="text" name="tanggal_lahir"
-                                                class="form-control form-control-sm {{ $errors->has('tanggal_lahir') ? 'border-danger' : '' }}"
-                                                value="{{ old('tanggal_lahir') }}" placeholder="Contoh: 21/04/1997">
+                                            <input type="date" id="tanggal_lahir" name="tanggal_lahir"
+                                                class="form-control {{ $errors->has('tanggal_lahir') ? 'border-danger' : '' }}"
+                                                value="{{ old('tanggal_lahir') }}"
+                                                placeholder="Masukkan Tanggal Lahir (Format: dd/mm/yyyy)"
+                                                autocomplete="off">
+                                            @if ($errors->has('tanggal_lahir'))
+                                                <div class="small text-danger mt-1">
+                                                    {{ ucfirst($errors->first('tanggal_lahir')) }}</div>
+                                            @endif
                                             @if ($errors->has('tanggal_lahir'))
                                                 <div class="small text-danger mt-1">
                                                     {{ ucfirst($errors->first('tanggal_lahir')) }}</div>
@@ -92,39 +92,42 @@
                                             @endif
                                         </div>
                                     </div>
-                                    <div class="form-group row">
+                                    <div class="form-group row mt-2">
                                         <label class="col-md-2 col-form-label">Nomor HP <span
                                                 class="text-danger">*</span></label>
                                         <div class="col-md-10">
-                                            <input type="text" name="nomor_hp"
-                                                class="form-control form-control-sm {{ $errors->has('nomor_hp') ? 'border-danger' : '' }}"
-                                                value="{{ old('nomor_hp') }}">
+                                            <input type="text" name="nomor_hp" id="nomor_hp"
+                                                oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                                class="form-control {{ $errors->has('nomor_hp') ? 'border-danger' : '' }}"
+                                                value="{{ old('nomor_hp') }}" placeholder="Masukkan Nomor HP">
                                             @if ($errors->has('nomor_hp'))
                                                 <div class="small text-danger mt-1">
                                                     {{ ucfirst($errors->first('nomor_hp')) }}</div>
                                             @endif
                                         </div>
                                     </div>
-                                    <div class="form-group row">
+                                    <div class="form-group row mt-2">
                                         <label class="col-md-2 col-form-label">Referal (Bila Ada) </label>
                                         <div class="col-md-10">
-                                            <input type="text" name="reference" class="form-control " value="" placeholder="kode referal "> </div>
+                                            <input type="text" name="reference" class="form-control " value=""
+                                                placeholder="kode referal ">
                                         </div>
                                     </div>
-                                    <div class="form-group row">
+                                    <div class="form-group row mt-2">
                                         <label class="col-md-2 col-form-label">Asal/Nama Sekolah/Nama Instansi/lainnya <span
-											class="text-danger">*</span></label>
+                                                class="text-danger">*</span></label>
                                         <div class="col-md-10">
-                                             <input type="text" name="instansi" class="form-control form-control-sm" value=""
-                                                    placeholder="Masukkan Asal/Nama Sekolah/Nama Instansi">
+                                            <input type="text" name="instansi" class="form-control form-control-sm"
+                                                value="" placeholder="Masukkan Asal/Nama Sekolah/Nama Instansi">
                                             @if ($errors->has('instansi'))
                                                 <div class="small text-danger mt-1">
                                                     {{ ucfirst($errors->first('instansi')) }}</div>
                                             @endif
                                         </div>
                                     </div>
-									<div class="form-group row">
-                                        <label class="col-md-2 col-form-label">Profesi<span class="text-danger">*</span></label>
+                                    <div class="form-group row">
+                                        <label class="col-md-2 col-form-label">Profesi<span
+                                                class="text-danger">*</span></label>
                                         <div class="col-md-10">
                                             <select name="user_kategori" class="form-control ">
                                                 <option value="" disabled selected>Pilih Profesi</option>
@@ -144,84 +147,86 @@
                                             @endif
                                         </div>
                                     </div>
-                            </div>
 
+                                    <p class="h6 text-center font-weight-bold mb-3 mt-5">Akun Pendaftar</p>
 
-                            <p class="h6 text-center font-weight-bold mb-3 mt-5">Akun Pendaftar</p>
-
-                            <div class="form-group row">
-                                <label class="col-md-2 col-form-label">Email <span class="text-danger">*</span></label>
-                                <div class="col-md-10">
-                                    <input type="email" name="email"
-                                        class="form-control form-control-sm {{ $errors->has('email') ? 'border-danger' : '' }}"
-                                        value="{{ old('email') }}">
-                                    @if ($errors->has('email'))
-                                        <div class="small text-danger mt-1">{{ ucfirst($errors->first('email')) }}</div>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-md-2 col-form-label">Username <span class="text-danger">*</span></label>
-                                <div class="col-md-10">
-                                    <input type="text" name="username"
-                                        class="form-control form-control-sm {{ $errors->has('username') ? 'border-danger' : '' }}"
-                                        value="{{ old('username') }}">
-                                    @if ($errors->has('username'))
-                                        <div class="small text-danger mt-1">{{ ucfirst($errors->first('username')) }}
-                                        </div>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="form-group row mt-2">
-                                <label class="col-md-2 col-form-label">Password <span class="text-danger">*</span></label>
-                                <div class="col-md-10">
-                                    <div class="input-group">
-                                        <input type="password" name="password"
-                                            class="form-control form-control-sm {{ $errors->has('password') ? 'border-danger' : '' }}">
-                                        <div class="input-group-append">
-                                            <a href="#"
-                                                class="input-group-text text-dark btn btn-toggle-password {{ $errors->has('password') ? 'border-danger' : 'bg-theme-1 text-white' }}"><i
-                                                    class="fa fa-eye"></i></a>
+                                    <div class="form-group row">
+                                        <label class="col-md-2 col-form-label">Email <span
+                                                class="text-danger">*</span></label>
+                                        <div class="col-md-10">
+                                            <input type="email" name="email"
+                                                class="form-control form-control-sm {{ $errors->has('email') ? 'border-danger' : '' }}"
+                                                value="{{ old('email') }}">
+                                            @if ($errors->has('email'))
+                                                <div class="small text-danger mt-1">{{ ucfirst($errors->first('email')) }}
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
-                                    @if ($errors->has('password'))
-                                        <div class="small text-danger mt-1">{{ ucfirst($errors->first('password')) }}
-                                        </div>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="form-group row mt-2">
-                                <label class="col-md-2 col-form-label">Ulangi Password <span
-                                        class="text-danger">*</span></label>
-                                <div class="col-md-10">
-                                    <div class="input-group">
-                                        <input type="password" name="password_confirmation"
-                                            class="form-control form-control-sm {{ $errors->has('password') ? 'border-danger' : '' }}">
-                                        <div class="input-group-append">
-                                            <a href="#"
-                                                class="input-group-text text-dark btn btn-toggle-password {{ $errors->has('password') ? 'border-danger' : 'bg-theme-1 text-white' }}"><i
-                                                    class="fa fa-eye"></i></a>
+                                    <div class="form-group row">
+                                        <label class="col-md-2 col-form-label">Username <span
+                                                class="text-danger">*</span></label>
+                                        <div class="col-md-10">
+                                            <input type="text" name="username"
+                                                class="form-control form-control-sm {{ $errors->has('username') ? 'border-danger' : '' }}"
+                                                value="{{ old('username') }}">
+                                            @if ($errors->has('username'))
+                                                <div class="small text-danger mt-1">
+                                                    {{ ucfirst($errors->first('username')) }}
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="form-group row mt-2">
-                                <div class="col-md-2"></div>
-                                <div class="col-md-10">
-                                    <button type="submit" class="btn btn-theme-1 rounded-1"><i
-                                            class="fa fa-check mr-1"></i> Daftar</button>
-                                </div>
+                                    <div class="form-group row mt-2">
+                                        <label class="col-md-2 col-form-label">Password <span
+                                                class="text-danger">*</span></label>
+                                        <div class="col-md-10">
+                                            <div class="input-group">
+                                                <input type="password" name="password"
+                                                    class="form-control form-control-sm {{ $errors->has('password') ? 'border-danger' : '' }}">
+                                                <div class="input-group-append">
+                                                    <a href="#"
+                                                        class="input-group-text text-dark btn btn-toggle-password {{ $errors->has('password') ? 'border-danger' : 'bg-theme-1 text-white' }}"><i
+                                                            class="fa fa-eye"></i></a>
+                                                </div>
+                                            </div>
+                                            @if ($errors->has('password'))
+                                                <div class="small text-danger mt-1">
+                                                    {{ ucfirst($errors->first('password')) }}
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="form-group row mt-2">
+                                        <label class="col-md-2 col-form-label">Ulangi Password <span
+                                                class="text-danger">*</span></label>
+                                        <div class="col-md-10">
+                                            <div class="input-group">
+                                                <input type="password" name="password_confirmation"
+                                                    class="form-control form-control-sm {{ $errors->has('password') ? 'border-danger' : '' }}">
+                                                <div class="input-group-append">
+                                                    <a href="#"
+                                                        class="input-group-text text-dark btn btn-toggle-password {{ $errors->has('password') ? 'border-danger' : 'bg-theme-1 text-white' }}"><i
+                                                            class="fa fa-eye"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row mt-2">
+                                        <div class="col-md-2"></div>
+                                        <div class="col-md-10">
+                                            <button type="submit" class="btn btn-theme-1 rounded-1"><i
+                                                    class="fa fa-check mr-1"></i> Daftar</button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
-                        </form>
                     </div>
                 </div>
             </div>
         </div>
-        </div>
-        </div>
     </section>
-
 @endsection
 
 @section('js-extra')
@@ -230,15 +235,6 @@
         integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ=="
         crossorigin="anonymous"></script>
     <script>
-        // Datepicker
-        $(document).ready(function() {
-            $("input[name=tanggal_lahir]").datepicker({
-                format: 'dd/mm/yyyy',
-                autoclose: true,
-                todayHighlight: true,
-            });
-        });
-
         // Button Toggle Password
         $(document).on("click", ".btn-toggle-password", function(e) {
             e.preventDefault();
@@ -274,6 +270,24 @@
 
         label {
             font-size: .875rem;
+        }
+
+        input#tanggal_lahir {
+            display: inline-block;
+            position: relative;
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            background: transparent;
+            bottom: 0;
+            color: transparent;
+            cursor: pointer;
+            height: auto;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: auto;
         }
     </style>
 
