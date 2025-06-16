@@ -153,9 +153,11 @@ class ArtikelController extends Controller
 
         // Dynamic URLs from Posts
         foreach (Blog::all() as $post) {
+            $date = $post->blog_updated == null ? $post->blog_at : $post->blog_updated;
+
             $urls[] = [
                 'loc' => URL::to('/artikel/' . $post->blog_permalink),
-                'lastmod' => Carbon::parse($post->blog_updated, 'Asia/Jakarta')->toAtomString(),
+                'lastmod' => Carbon::parse($date, 'Asia/Jakarta')->toAtomString(),
                 'changefreq' => 'weekly',
                 'priority' => '0.9'
             ];

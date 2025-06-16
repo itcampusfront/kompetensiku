@@ -1,7 +1,7 @@
 @extends('template.main')
 
 @section('title', 'Artikel | ')
-
+@section('meta_description', 'Baca artikel terbaru seputar pengembangan SDM, teknologi, keuangan, bisnis, dan spiritual di Kompetensiku. Dapatkan tips karier, pelatihan, dan wawasan kompetensi untuk mendukung kesuksesan Anda')
 @section('content')
 
 <div class="container mt-3">

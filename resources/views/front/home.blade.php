@@ -1,5 +1,7 @@
 @extends('template.main')
 
+@section('meta_description', 'Kompetensiku – Platform pelatihan & sertifikasi SDM, teknologi, bisnis, keuangan, dan spiritual. Dapatkan materi berkualitas, fasilitator berpengalaman, dan program BNSP—online maupun tatap muka—dengan harga terjangkau. Hubungi WhatsApp 0816343741')
+
 @section('content')
 <section class="section-carousel">
 	<div class="container pb-3 pt-0 pt-md-3 px-0 px-lg-auto">

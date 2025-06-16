@@ -1,7 +1,7 @@
 @extends('template.main')
 
 @section('title', $artikel->blog_title.' - Artikel | ')
-
+@section('meta_description', $artikel->meta_description)
 @section('content')
 
 <div class="container mt-3">
