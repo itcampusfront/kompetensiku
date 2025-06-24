@@ -20,7 +20,7 @@
 </head>
 
 <body>
-    @php $wa = "https://api.whatsapp.com/send/?phone=".setting('site.whatsapp')."&text&type=phone_number&app_absent=0"  @endphp
+    
     <div class="wrapper">
 
         <!-- Navbar -->

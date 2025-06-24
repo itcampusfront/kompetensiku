@@ -15,7 +15,8 @@
                     <p class="mt-3 sub-tag">Program Pelatihan dan Sertifikasi SDM terpercaya bersama fasilitator profesional
                         dan
                         Praktisi SDM lokal siap mendukung pengembangan kinerja organisasi Anda.</p>
-                    <div class="button">                       
+                    <div class="button">
+                        @php $wa = "https://api.whatsapp.com/send/?phone=".setting('site.whatsapp')."&text&type=phone_number&app_absent=0"  @endphp                       
                         <a href="{{ $wa }}" target="__blank" class="btn btn-dark">Hubungi Kami</a>
                         <a href="{{ setting('site.medsos.facebook') }}"><img src="{{ asset('assets/new_assets/devicon_facebook.png') }}" /></a>
                         <a href="{{ setting('site.medsos.instagram') }}"><img src="{{ asset('assets/new_assets/skill-icons_instagram.png') }}" /></a>

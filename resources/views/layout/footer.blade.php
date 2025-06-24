@@ -12,6 +12,7 @@
                       resources—ketika SDM berkembang, bisnis pun tumbuh.
                   </p>
                   <div class="d-flex gap-3">
+                    @php $wa = "https://api.whatsapp.com/send/?phone=".setting('site.whatsapp')."&text&type=phone_number&app_absent=0"  @endphp
                       <a target="__blank"
                           href="{{ $wa }}"><img
                               src="{{ asset('assets/new_assets/logos_whatsapp-icon.png') }}" alt="WhatsApp"
