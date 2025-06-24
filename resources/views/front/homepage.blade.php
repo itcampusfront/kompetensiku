@@ -280,7 +280,7 @@
                             <div class="card-body p-0">
                                 <a class="no-decoration" href="/artikel/{{ $data->blog_permalink }}" target="__blank">
                                     <img src="{{ image('assets/images/blog/' . $data->blog_gambar, 'blog') }}"
-                                        alt="{{ $data->blog_title }}" class="img-fluid rounded-1 w-100">
+                                        alt="{{ $data->blog_title }}" class="img-fluid rounded-1 w-100 card-image">
                                     <p class="card-text text-main fw-bold my-2">
                                         {{ $data->blog_title }}
                                     </p>
