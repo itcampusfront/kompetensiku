@@ -1,4 +1,4 @@
-@extends('template.main')
+@extends('layout.main')
 
 @section('title', 'Pencarian | ')
 

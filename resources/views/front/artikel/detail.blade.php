@@ -1,10 +1,10 @@
-@extends('template.main')
+@extends('layout.main')
 
 @section('title', $artikel->blog_title.' - Artikel | ')
 @section('meta_description', $artikel->meta_description)
 @section('content')
 
-<div class="container mt-3">
+<div class="container p-top">
 	<nav aria-label="breadcrumb">
 	  <ol class="breadcrumb bg-white p-3 shadow-sm rounded-1">
 	    <li class="breadcrumb-item"><a href="{{ route('site.home') }}"><i class="fas fa-home"></i></a></li>

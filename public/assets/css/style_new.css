@@ -1,0 +1,349 @@
+html {
+    margin: 0;
+}
+body {
+    font-family: "Segoe UI", sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+.wrapper {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: 100%;
+
+    /* fallback height */
+    min-height: 100vh;
+
+    /* new small viewport height for modern browsers */
+    min-height: 100svh;
+}
+
+iframe {
+    width: 100%;
+    border: none;
+    border-radius: 5px;
+}
+
+.no-decoration {
+    text-decoration: none;
+}
+
+.navbar {
+    position: absolute;
+    width: 100%;
+    z-index: 10;
+}
+.stats-item-ket {
+    font-size: 20px;
+}
+
+.mh-100 {
+    min-height: 100vh;
+}
+
+.stats-item-number {
+    font-size: 30px;
+    margin: 0;
+}
+
+.hero {
+    background: url("/assets/new_assets/bg-hero.png") no-repeat right top;
+    background-size: contain;
+    background-color: #fff;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    /* position: relative; */
+    padding-top: 6rem; /* space for navbar */
+    padding-bottom: 4rem;
+}
+
+.p-top {
+    padding-top: 6rem;
+}
+
+.btn-custom-120 {
+    width: 120px;
+    border-radius: 8px;
+    padding: 0.4rem 1.2rem;
+}
+.btn-custom-180 {
+    width: 180px;
+    border-radius: 8px;
+    padding: 0.4rem 1.2rem;
+}
+
+.bg-main {
+    background-color: #000e38;
+}
+
+.btn-main-1 {
+    background-color: #fb8312;
+    color: white;
+}
+
+.btn-main-2 {
+    background-color: white;
+    color: #000e38;
+    border: 2px solid #000e38;
+}
+
+.btn-main-1:hover {
+    background-color: transparent;
+    color: #fb8312;
+    border: 2px solid #fb8312;
+}
+
+.btn-main-2:hover {
+    background-color: transparent;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+}
+
+.btn-main-1,
+.btn-main-2 {
+    transition: all 0.3s ease-in-out;
+}
+.btn-orange {
+    background-color: #fb8312;
+    color: white;
+}
+
+.text-orange {
+    color: #fb8312;
+}
+
+.text-main {
+    color: #000e38;
+}
+
+.text-submain {
+    color: rgba(0, 0, 0, 0.7);
+}
+
+.nav-link.active-link {
+    font-weight: bold;
+    width: fit-content;
+    color: #fb8312;
+    border-bottom: 2px solid #fb8312;
+}
+
+.hero-overlay {
+    /* background: linear-gradient(to right, rgba(255,255,255,0.95) 50%, rgba(255,255,255,0) 90%); */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.stats-item {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #fff;
+}
+.sub-tag {
+    padding: 5px;
+    border-radius: 10px;
+    background-color: white;
+}
+.stats-group {
+    margin-top: 5rem;
+}
+
+.about-content {
+    margin: 3rem 0;
+    background-image: url("/assets/new_assets/ellipse-2.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: auto;
+    align-items: center;
+}
+
+.hero-about {
+    padding: 3rem;
+}
+
+.paragrap p {
+    text-align: justify;
+}
+
+.sub-layanan {
+    width: 700px;
+    margin: 0 auto;
+}
+
+.img-layanan {
+    height: 70px;
+    width: auto;
+    margin: 0 auto;
+}
+
+.layanan-content {
+    margin: 3rem 0;
+}
+
+.about-content {
+    margin: 3rem 0;
+    height: auto;
+}
+
+.img-whyus-icon {
+    width: 40px;
+    height: auto;
+}
+
+.program-content {
+    margin: 3rem 0;
+    height: auto;
+    background-image: url("/assets/new_assets/ellipse-3.png"),
+        url("/assets/new_assets/ellipse-4.png");
+    background-position: left bottom, right bottom;
+    background-repeat: no-repeat, no-repeat;
+    background-size: auto, auto;
+}
+
+.hero-program {
+    padding: 3rem;
+}
+
+.button-program {
+    text-align: end;
+}
+.cta-section {
+    padding: 3rem;
+    background-color: #000e38;
+}
+
+.hero-cta {
+    padding: 1rem 8rem 1rem;
+}
+
+@media (max-width: 1300px) {
+    .navbar {
+        background-color: #fff;
+    }
+}
+
+@media (max-width: 1168px) {
+    .hero {
+        background-size: contain;
+        background-position: 115% top;
+    }
+
+    .program-content {
+        background-position: -80px bottom, calc(100% + 50px) bottom;
+    }
+}
+
+/* Responsive Tweaks */
+@media (max-width: 994px) {
+    .navbar {
+        background-color: #fff;
+    }
+    .hero {
+        background-size: 70%;
+        background-position: right top;
+    }
+
+    .program-content {
+        background-position: -180px bottom, calc(100% + 100px) bottom;
+    }
+    /* .hero-overlay {
+    background: rgba(255, 255, 255, 0.25);
+  } */
+}
+
+@media (max-width: 768px) {
+    /* .hero {
+        padding: 5rem 1rem 3rem;
+    background-size: 60%;
+
+    } */
+    /* .hero-overlay {
+    background: rgba(255, 255, 255, 0.25);
+  } */
+    .cta-section {
+        padding: 1rem;
+        background-color: #000e38;
+    }
+
+    .hero-cta {
+        padding: 10px;
+    }
+    .hero-about {
+        padding: 2rem;
+    }
+    .hero-program {
+        padding: 2rem 2rem 3rem;
+    }
+    .button-program {
+        text-align: start;
+    }
+    .program-content {
+        background-position: -330px bottom, calc(100% + 270px) bottom;
+    }
+    .hero h3 {
+        font-size: 1.5rem;
+    }
+
+    .hero p {
+        font-size: 0.95rem;
+    }
+
+    .btn {
+        font-size: 0.9rem;
+    }
+
+    .stats-item {
+        margin-bottom: 1rem;
+    }
+    .hero {
+        background: url("/assets/new_assets/new-bg-hero-cropped.png") no-repeat
+            right top;
+        background-size: auto;
+        padding-top: 0px; /* space for navbar */
+    }
+
+    .hero-overlay {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .sub-layanan {
+        width: 100%;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 500px) {
+    .hero {
+        align-items: flex-start;
+        padding-top: 8rem;
+        background: url("/assets/new_assets/new-bg-hero-cropped.png") no-repeat;
+        background-position: 80% top;
+    }
+    .hero-program {
+        padding: 2rem 1rem 3rem;
+    }
+    .stats-group {
+        margin-top: 10rem;
+    }
+    .program-content {
+        background-position: -400px bottom, calc(100% + 370px) bottom;
+    }
+}
+
+@media (min-width: 320px) and (max-width: 575.98px) {
+    .col-custom-6 {
+        width: 50%;
+        flex: 0 0 auto;
+    }
+}

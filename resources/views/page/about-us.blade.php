@@ -1,12 +1,10 @@
-@extends('template.main')
+@extends('layout.main')
 
 @section('title', 'Tentang Kami | ')
 
 @section('content')
-<div class="bg-theme-1 text-center" style="height: 200px">
-    <h3 class="text-white pt-5">Selamat Datang</h3>
-</div>
-<div class="container" style="top: -5em; position: relative;">
+
+<div class="container p-top">
     <div class="card">
         <div class="card-body">
             <div class="d-block d-lg-flex">
@@ -21,7 +19,7 @@
         </div>
     </div>
 </div>
-<div class="container mb-5">
+<div class="container mb-5 mt-3">
     <div class="heading text-center mb-5">
         <h3>Program Pelatihan dan Sertifikasi Praktisi Sumber Daya Manusia</h3>
         <div class="rounded-2 w-25 mx-auto" style="border: 3px solid var(--color-1)"></div>

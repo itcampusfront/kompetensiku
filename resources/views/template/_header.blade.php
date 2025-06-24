@@ -27,7 +27,7 @@
       </ul>
     </div>
     @endif
-    <div class="collapse navbar-collapse " id="navbarSupportedContent">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
     {{-- <form class="w-100 me-2 mt-3 mt-lg-0" method="get" action="{{ route('site.search') }}">
       <div class="input-group search-bar">
         <input type="text" class="form-control border-end-0" placeholder="Pencarian" name="q" value="{{ isset($_GET) && isset($_GET['q']) ? $_GET['q'] : '' }}" required>

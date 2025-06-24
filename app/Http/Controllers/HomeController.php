@@ -27,22 +27,23 @@ class HomeController extends Controller
         $slider = Slider::where('status_slider','=',1)->orderBy('order_slider','asc')->get();
 
         // Data program
-        $program = Program::join('users','program.author','=','users.id_user')->join('kategori_program','program.program_kategori','=','kategori_program.id_kp')->orderBy('program_at', 'desc')->limit(12)->get();
-
+        // $program = Program::join('users','program.author','=','users.id_user')->join('kategori_program','program.program_kategori','=','kategori_program.id_kp')->orderBy('program_at', 'desc')->limit(12)->get();
+        $program = Program::select('id_program','program_title','program_permalink','program_gambar')->orderBy('program_at', 'desc')->limit(4)->get();
         // Data mitra
         $mitra = Mitra::orderBy('order_mitra','asc')->get();
 
         // Data artikel terbaru
-        $artikel = Blog::join('users','blog.author','=','users.id_user')->join('kategori_artikel','blog.blog_kategori','=','kategori_artikel.id_ka')->orderBy('blog_at','desc')->limit(3)->get();
+        $artikel = Blog::select('id_blog','blog_title','blog_gambar','blog_permalink','blog_at')->orderBy('blog_at','desc')->limit(4)->get();
 
         $gallery = Gallery::orderBy('id','desc')->limit(3)->get();
         // View
-        return view('front.home', [
+        return view('front.homepage', [
             'artikel' => $artikel,
             'g' => $gallery,
             'mitra' => $mitra,
             'program' => $program,
             'slider' => $slider,
+            'count_program' => Program::count(),
 		]);
     }
 
