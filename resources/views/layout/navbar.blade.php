@@ -45,9 +45,30 @@
               <ul class="navbar-nav">
                   <li class="nav-item"><a class="nav-link {{ Request::path() == '/' ? 'active-link' : '' }}"
                           href="/">Beranda</a></li>
-                  <li class="nav-item"><a href="{{ route('site.halaman.detail', ['permalink' => 'tentang-kami']) }}"
-                          class="nav-link {{ is_int(strpos(Request::url(), route('site.halaman.detail', ['permalink' => 'tentang-kami']))) ? 'active-link' : '' }}">Tentang
-                          Kami</a></li>
+                  <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle {{ is_int(strpos(Request::url(), route('site.halaman.detail', ['permalink' => 'tentang-kami']))) ||
+                      is_int(strpos(Request::url(), route('site.halaman.gallery')))
+                          ? 'active-link'
+                          : '' }}"
+                          href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+                          aria-expanded="false">
+                          Tentang Kami
+                      </a>
+                      <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                          <li>
+                              <a class="dropdown-item {{ is_int(strpos(Request::url(), route('site.halaman.detail', ['permalink' => 'tentang-kami']))) ? 'active' : '' }}"
+                                  href="{{ route('site.halaman.detail', ['permalink' => 'tentang-kami']) }}">
+                                  Tentang Kami
+                              </a>
+                          </li>
+                          <li>
+                              <a class="dropdown-item {{ is_int(strpos(Request::url(), route('site.halaman.gallery'))) ? 'active' : '' }}"
+                                  href="{{ route('site.halaman.gallery') }}">
+                                  Galeri
+                              </a>
+                          </li>
+                      </ul>
+                  </li>
                   <li class="nav-item"><a
                           class="nav-link {{ is_int(strpos(Request::url(), route('site.program.index'))) ? 'active-link' : '' }}"
                           href="{{ route('site.program.index') }}">Program</a></li>

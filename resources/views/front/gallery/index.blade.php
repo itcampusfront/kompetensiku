@@ -1,6 +1,6 @@
 @extends('layout.main')
 
-@section('title', 'Acara | ')
+@section('title', 'Galeri Kegiatan | ')
 
 @section('content')
 
@@ -8,7 +8,7 @@
 	<nav aria-label="breadcrumb">
 	  <ol class="breadcrumb bg-white p-3 shadow-sm rounded-1">
 	    <li class="breadcrumb-item"><a href="{{ route('site.home') }}"><i class="fas fa-home"></i></a></li>
-	    <li class="breadcrumb-item active" aria-current="page">Acara</a></li>
+	    <li class="breadcrumb-item active" aria-current="page">Galeri Kegiatan</a></li>
 	  </ol>
 	</nav>
 </div>

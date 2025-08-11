@@ -221,7 +221,7 @@
             </div>
         </div>
     </section>
-    @if($testi != null)
+    @if(count($testi) > 0)
     <section class="testimoni">
         <div class="container-lg">
             <div class="row">
@@ -260,8 +260,8 @@
                         <div class="card testimonial-card mx-auto w-100" style="max-width: 450px;">
                             <div class="d-flex align-items-center mb-3">
                                 <img 
-                                    src="{{ !empty($t->foto_klien) && file_exists(public_path($t->foto_klien)) 
-                                            ? asset($t->foto_klien) 
+                                    src="{{ !empty($t->foto_klien) && file_exists(public_path('assets/images/testimoni/'.$t->foto_klien)) 
+                                            ? asset('assets/images/testimoni/'.$t->foto_klien) 
                                             : asset('assets/images/person-placeholder.png') }}" 
                                     alt="Profile" 
                                     class="profile-img rounded-circle me-3"
@@ -292,7 +292,13 @@
                     <div class="col-lg-3">
                         <div class="card testimonial-card">
                             <div class="d-flex align-items-center mb-3">
-                                <img src="{{ $t->foto_klien ?? asset('assets/images/person-placeholder.png') }}" alt="Profile" class="profile-img rounded-circle me-3">
+                                <img 
+                                    src="{{ !empty($t->foto_klien) && file_exists(public_path('assets/images/testimoni/'.$t->foto_klien)) 
+                                            ? asset('assets/images/testimoni/'.$t->foto_klien) 
+                                            : asset('assets/images/person-placeholder.png') }}" 
+                                    alt="Profile" 
+                                    class="profile-img rounded-circle me-3"
+                                >
                                 <div>
                                 <h6 class="mb-0 fw-bold">{{ $t->nama_klien }}</h6>
                                 <small class="text-muted">{{ $t->profesi_klien }}</small>
