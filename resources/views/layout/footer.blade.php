@@ -16,9 +16,9 @@
                       <a target="__blank" href="{{ $wa }}"><img
                               src="{{ asset('assets/new_assets/logos_whatsapp-icon.png') }}" alt="WhatsApp"
                               width="24"></a>
-                      <a href="#"><img src="{{ asset('assets/new_assets/skill-icons_instagram.png') }}"
+                      <a href="{{ setting('site.medsos.instagram') }}"><img src="{{ asset('assets/new_assets/skill-icons_instagram.png') }}"
                               alt="Instagram" width="24"></a>
-                      <a href="#"><img src="{{ asset('assets/new_assets/devicon_facebook.png') }}" alt="Facebook"
+                      <a href="{{ setting('site.medsos.facebook') }}"><img src="{{ asset('assets/new_assets/devicon_facebook.png') }}" alt="Facebook"
                               width="24"></a>
                   </div>
               </div>

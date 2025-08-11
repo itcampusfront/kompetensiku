@@ -40,7 +40,7 @@
         <div class="container-lg hero-about">
             <div class="row">
                 <div class="col-md-6">
-                    <img src="{{ asset('assets/new_assets/about-us.png') }}" alt="about us" class="img-fluid img-about">
+                    <img src="{{ asset('assets/new_assets/about-kompetensiku-image.jpeg') }}" alt="about kompetensiku" class="img-fluid img-about rounded-1">
                 </div>
                 <div class="col-md-6">
                     <h2 class="text-orange">Tentang <span class="text-main fw-bold">Kompetensiku</span></h2>
@@ -221,6 +221,91 @@
             </div>
         </div>
     </section>
+    @if($testi != null)
+    <section class="testimoni">
+        <div class="container-lg">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h2 class="text-orange">Testimonial </h2>
+                    <div class="text-submain">
+                        <p class="sub-layanan">Testimoni dari para alumni yang mengikuti pelatihan SDM bersama kami dan merasa terbantu </p>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-5">
+                {{-- <div class="col-4">
+                    <div class="card testimonial-card mx-auto w-100" style="max-width: 450px;">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="{{ asset('assets/images/person-placeholder.png') }}" alt="Profile" class="profile-img rounded-circle me-3">
+                            <div>
+                            <h6 class="mb-0 fw-bold">Wahana Alfin Sihab S. Kom</h6>
+                            <small class="text-muted">Staff SDM PT Jaya Abadi</small>
+                            </div>
+                        </div>
+                        <p class="testimonial-text">
+                            " This is particularly useful for higher-priced or complex products, where buyers need extra reassurance.
+                            By showcasing testimonials that discuss common objections and how they were resolved,
+                            you can pre-emptively address and reduce hesitation."
+                        </p>
+                        <div class="testimonial-footer">
+                            Pelatihan Staff SDM
+                        </div>
+                    </div>
+                </div> --}}
+              <!-- Mobile Slider -->
+                <div id="testimonialCarousel" class="carousel slide d-lg-none" data-bs-ride="carousel" data-bs-interval="3000">
+                    <div class="carousel-inner">
+                    @foreach($testi as $index => $t)
+                        <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                        <div class="card testimonial-card mx-auto w-100" style="max-width: 450px;">
+                            <div class="d-flex align-items-center mb-3">
+                                <img 
+                                    src="{{ !empty($t->foto_klien) && file_exists(public_path($t->foto_klien)) 
+                                            ? asset($t->foto_klien) 
+                                            : asset('assets/images/person-placeholder.png') }}" 
+                                    alt="Profile" 
+                                    class="profile-img rounded-circle me-3"
+                                >
+                                <div>
+                                    <h6 class="mb-0 fw-bold">{{ $t->nama_klien }}</h6>
+                                    <small class="text-muted">{{ $t->profesi_klien }}</small>
+                                </div>
+                            </div>
+                            <p class="testimonial-text">"{{ $t->testimoni }}"</p>
+                        </div>
+                        </div>
+                    @endforeach
+                    </div>
+
+                    <!-- Controls -->
+                    <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon bg-dark rounded-circle p-2"></span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon bg-dark rounded-circle p-2"></span>
+                    </button>
+                </div>
+
+                <!-- Desktop Grid -->
+                <div class="row g-3 d-none d-lg-flex mt-2">
+                    @foreach($testi as $t)
+                    <div class="col-lg-3">
+                        <div class="card testimonial-card">
+                            <div class="d-flex align-items-center mb-3">
+                                <img src="{{ $t->foto_klien ?? asset('assets/images/person-placeholder.png') }}" alt="Profile" class="profile-img rounded-circle me-3">
+                                <div>
+                                <h6 class="mb-0 fw-bold">{{ $t->nama_klien }}</h6>
+                                <small class="text-muted">{{ $t->profesi_klien }}</small>
+                                </div>
+                            </div>
+                            <p class="testimonial-text">"{{ $t->testimoni }}"</p>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+        </div>
+    </section>
+    @endif
     <section class="layanan-content">
         <div class="container-lg hero-layanan">
             <div class="row">
@@ -292,4 +377,23 @@
             </div>
         </div>
     </section>
+@endsection
+
+@section('css-extra')
+<style>
+.testimonial-card {
+      border-radius: 15px;
+      border: none;
+      box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+    .testimonial-text { font-size: 0.95rem; color: #333; }
+    .testimonial-footer { font-size: 0.9rem; color: gray; text-align: center; margin-top: 15px; }
+    .profile-img {
+      width: 50px; height: 50px;
+      object-fit: contain; background: #fff;
+      border: 1px solid #ddd; padding: 2px;
+    }
+</style>
+
 @endsection

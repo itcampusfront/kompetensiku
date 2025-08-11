@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Campusdigital\CampusCMS\Models\Slider;
 use Campusdigital\CampusCMS\Models\Gallery;
 use Campusdigital\CampusCMS\Models\Program;
+use Campusdigital\CampusCMS\Models\Testimoni;
 
 class HomeController extends Controller
 {		
@@ -36,6 +37,7 @@ class HomeController extends Controller
         $artikel = Blog::select('id_blog','blog_title','blog_gambar','blog_permalink','blog_at')->orderBy('blog_at','desc')->limit(4)->get();
 
         $gallery = Gallery::orderBy('id','desc')->limit(3)->get();
+        $testi = Testimoni::orderBy('id_testimoni','desc')->limit(4)->get();
         // View
         return view('front.homepage', [
             'artikel' => $artikel,
@@ -43,6 +45,7 @@ class HomeController extends Controller
             'mitra' => $mitra,
             'program' => $program,
             'slider' => $slider,
+            'testi' => $testi,
             'count_program' => Program::count(),
 		]);
     }
