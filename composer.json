@@ -30,7 +30,7 @@
         "sort-packages": true,
         "platform-check": false,
         "platform": {
-            "php": "7.4.33"
+            "php": "8.3.36"
         },
         "audit": {
             "ignore": [
