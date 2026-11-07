@@ -7,6 +7,10 @@ use App\Http\Controllers\MentorController;
 use App\Http\Controllers\ArtikelController;
 use App\Http\Controllers\HalamanController;
 use App\Http\Controllers\ProgramController;
+use App\Http\Controllers\FrontRegisterController;
+use App\Http\Controllers\SkemaUjiController;
+use App\Http\Controllers\SkemaJadwalController;
+use App\Http\Controllers\PendaftarController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +32,10 @@ Route::get('/', [HomeController::class,'index'])->name('site.home');
 // Search
 Route::get('/search', [HomeController::class, 'search'])->name('site.search');
 
+// Frontend Registrasi Uji Kompetensi (Publik)
+Route::get('/register-uji', [FrontRegisterController::class, 'index'])->name('front.register.index');
+Route::post('/register-uji', [FrontRegisterController::class, 'store'])->name('front.register.store');
+
 // Program
 Route::get('/program', [ProgramController::class,'index'])->name('site.program.index');
 Route::get('/program/{permalink}', [ProgramController::class,'detail'])->name('site.program.detail');
@@ -44,10 +52,26 @@ Route::get('/artikel/tag/{tag}', [ArtikelController::class, 'tag'])->name('site.
 //sitemap
 Route::get('/seo/sitemap.xml', [ArtikelController::class, 'generate'])->name('site.artikel.sitemaps');
 
-// Program
+// Program / Mentor
 Route::get('/mentor', [MentorController::class, 'index'])->name('site.mentor.index');
 
-// Halaman
+// ======================================================================
+// ROUTE MANAGEMENT ADMIN (SKEMA UJI, JADWAL, & PENDAFTAR)
+// ======================================================================
+Route::group(['middleware' => ['campuscms.admin'], 'prefix' => 'admin', 'as' => 'admin.'], function () {
+    // CRUD Skema Uji & Skema Jadwal
+    Route::resource('skema-uji', SkemaUjiController::class);
+    Route::resource('skema-jadwal', SkemaJadwalController::class);
+
+    // Update Status, Cetak Native PDF, & Export ZIP Pendaftar
+    Route::patch('pendaftar/{id}/status', [PendaftarController::class, 'updateStatus'])->name('pendaftar.update-status');
+    Route::get('pendaftar/{id}/cetak-pdf', [PendaftarController::class, 'cetakPdf'])->name('pendaftar.cetak-pdf');
+    Route::get('pendaftar/{id}/export-zip', [PendaftarController::class, 'exportZip'])->name('pendaftar.export-zip');
+
+    // CRUD Data Pendaftar (hanya index, show, destroy)
+    Route::resource('pendaftar', PendaftarController::class)->only(['index', 'show', 'destroy']);
+});
+
+// Halaman Dinamis (Wajib di Paling Bawah agar permalink tidak memotong route lain)
 Route::get('/{permalink}', [HalamanController::class,'detail'])->name('site.halaman.detail');
 Route::get('/page/gallery', [HalamanController::class,'gallery'])->name('site.halaman.gallery');
-
