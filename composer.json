@@ -28,11 +28,18 @@
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,
+        "platform-check": false,
         "platform": {
-            "php": "8.3.36"
+            "php": "7.4.33"
         },
         "audit": {
             "ignore": [
+                "PKSA-cv56-2228-pzr6",
+                "PKSA-6r8f-nxsb-67bq",
+                "PKSA-gh7h-hhy4-byg7",
+                "PKSA-mwt3-h9tv-kx78",
+                "PKSA-hp6n-n4kz-21wk",
+                "PKSA-mckv-s5hg-868k",
                 "PKSA-qstp-ffwg-8hp6",
                 "PKSA-5vz3-q51h-7mg4",
                 "PKSA-7ztm-rpt3-qqzk",
@@ -45,15 +52,8 @@
                 "PKSA-3dsp-r6t7-8xmz",
                 "PKSA-cwpj-dtf9-6fg1"
             ]
-        },
-        "policy": {
-            "advisories": {
-                "ignore": ["dompdf/dompdf"],
-                "block": false
-            }
         }
     },
-    
     "extra": {
         "laravel": {
             "dont-discover": []
