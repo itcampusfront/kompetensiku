@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1035d5a58d22512ba1e01294774c14ae",
+    "content-hash": "aca799775745d48d41c0190f0f566a4f",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -292,7 +292,7 @@
             "dist": {
                 "type": "path",
                 "url": "packages/campusdigital/campuscms",
-                "reference": "d7f690d1149dec2c5755cb92797a9d808f6a2fdd"
+                "reference": "b7b3de7695dcdb74ac5fc02a66697f108c149ae9"
             },
             "require": {
                 "barryvdh/laravel-dompdf": "^2.0",
@@ -332,7 +332,7 @@
             ],
             "description": "Pengembangan ulang dari FaturCMS",
             "transport-options": {
-                "symlink": true,
+                "symlink": false,
                 "relative": true
             }
         },

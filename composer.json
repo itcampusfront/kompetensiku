@@ -12,7 +12,7 @@
             "type": "path",
             "url": "packages/campusdigital/campuscms",
             "options": {
-                "symlink": true
+                "symlink": false
             }
         }
     ],
