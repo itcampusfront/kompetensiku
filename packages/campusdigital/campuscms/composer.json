@@ -1,0 +1,39 @@
+{
+    "name": "campusdigital/campuscms",
+    "description": "Pengembangan ulang dari FaturCMS",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "wahana",
+            "email": "alfinsihab1@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Campusdigital\\CampusCMS\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Campusdigital\\CampusCMS\\FaturCMSServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^7.3|^8.0",
+        "campusdatamedia/faturhelper": "^2.0",
+        "barryvdh/laravel-dompdf": "^2.0",
+        "hisorange/browser-detect": "^4.4",
+        "jorenvanhocht/laravel-share": "^4.0",
+        "laravel/ui": "^3.0",
+        "maatwebsite/excel": "^3.1",
+        "nao-pon/flysystem-google-drive": "~1.1",
+        "simplesoftwareio/simple-qrcode": "^4.2",
+        "spatie/laravel-backup": "^6.0",
+        "stevebauman/location": "^6.1",
+        "yajra/laravel-datatables-oracle": "~9.0"
+    }
+}

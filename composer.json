@@ -7,9 +7,18 @@
         "laravel"
     ],
     "license": "MIT",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "packages/campusdigital/campuscms",
+            "options": {
+                "symlink": true
+            }
+        }
+    ],
     "require": {
         "php": "^7.4 || ^8.0",
-        "campusdigital/campuscms": "^1.3",
+        "campusdigital/campuscms": "*",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
@@ -17,9 +26,12 @@
         "laravel/sanctum": "^2.15",
         "laravel/tinker": "^2.0"
     },
+    "replace": {
+        "symfony/css-selector": "*"
+    },
     "require-dev": {
         "facade/ignition": "^2.3.6",
-        "fzaninotto/faker": "^1.9.1",
+        "fakerphp/faker": "^1.23",
         "mockery/mockery": "^1.3.1",
         "nunomaduro/collision": "^5.0",
         "phpunit/phpunit": "^9.3"
