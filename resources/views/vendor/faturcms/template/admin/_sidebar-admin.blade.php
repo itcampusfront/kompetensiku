@@ -234,6 +234,20 @@
         </li>
         <!-- ====================================================================== -->
 
+        <!-- ====================================================================== -->
+        <!-- ADD-ON: SMART BASED ASSESSMENT (SBA) -->
+        <!-- ====================================================================== -->
+        @if(Route::has('sba.index'))
+        <div class="app-menu-title"><span class="font-weight-bold" style="color: var(--primary)">Online Assessment</span></div>
+        <li>
+            <a class="app-menu__item {{ request()->routeIs('sba.*') ? 'active' : '' }}" href="{{ route('sba.index') }}">
+                <i class="app-menu__icon fa fa-laptop"></i>
+                <span class="app-menu__label">Uji Online</span>
+            </a>
+        </li>
+        @endif
+        <!-- ====================================================================== -->
+
         @if(has_access('SertifikatController::indexTrainer', Auth::user()->role, false) || has_access('SertifikatController::indexParticipant', Auth::user()->role, false) || has_access('SignatureController::index', Auth::user()->role, false) || has_access('AbsensiController::index', Auth::user()->role, false))
         <div class="app-menu-title"><span class="font-weight-bold" style="color: var(--primary)">Lainnya</span></div>
         @endif

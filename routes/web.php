@@ -72,6 +72,16 @@ Route::group(['middleware' => ['campuscms.admin'], 'prefix' => 'admin', 'as' => 
     Route::resource('pendaftar', PendaftarController::class)->only(['index', 'show', 'destroy']);
 });
 
+
+// ==============================================================================
+// 5. AUTOMATIC ADD-ON LOADER (PREMIUM MODULES)
+// ==============================================================================
+if (file_exists(base_path('routes/sba_routes.php'))) {
+    require base_path('routes/sba_routes.php');
+}
+
+
 // Halaman Dinamis (Wajib di Paling Bawah agar permalink tidak memotong route lain)
 Route::get('/{permalink}', [HalamanController::class,'detail'])->name('site.halaman.detail');
 Route::get('/page/gallery', [HalamanController::class,'gallery'])->name('site.halaman.gallery');
+
