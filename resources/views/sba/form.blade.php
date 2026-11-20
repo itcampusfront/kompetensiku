@@ -319,20 +319,41 @@
             <div class="opsi-wrapper border-top pt-3 mt-3">
                 <label class="font-weight-bold text-primary d-block mb-2">
                     <i class="fa fa-check-circle"></i> Pilihan Jawaban & Kunci 
-                    <small class="text-muted font-weight-normal">(Centang / pilih kunci jawaban yang benar)</small>
+                    <small class="text-muted font-weight-normal">(Centang / pilih kunci jawaban yang benar. Opsi dapat berupa teks, gambar, atau keduanya.)</small>
                 </label>
                 
                 <div class="opsi-container">
                     @foreach(['A', 'B', 'C', 'D', 'E'] as $index => $huruf)
-                    <div class="input-group mb-2 opsi-item">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text font-weight-bold bg-secondary text-white">{{ $huruf }}</span>
-                            <div class="input-group-text bg-white">
-                                <input type="radio" class="kunci-radio" value="{{ $index }}" title="Kunci PG" style="cursor: pointer;">
-                                <input type="checkbox" class="kunci-checkbox d-none" value="{{ $index }}" title="Kunci PG Kompleks" style="cursor: pointer;">
+                    <div class="opsi-item border rounded p-2 mb-2 bg-light" data-opt-index="{{ $index }}">
+                        <div class="row align-items-start">
+                            {{-- KOLOM KIRI: BADGE HURUF, RADIO/CHECKBOX KUNCI & TEKS OPSI --}}
+                            <div class="col-12 col-md-7 mb-2 mb-md-0">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text font-weight-bold bg-secondary text-white">{{ $huruf }}</span>
+                                        <div class="input-group-text bg-white">
+                                            <input type="radio" class="kunci-radio" value="{{ $index }}" title="Kunci PG" style="cursor: pointer;">
+                                            <input type="checkbox" class="kunci-checkbox d-none" value="{{ $index }}" title="Kunci PG Kompleks" style="cursor: pointer;">
+                                        </div>
+                                    </div>
+                                    <textarea class="form-control opsi-teks" rows="2" placeholder="Masukkan teks untuk opsi {{ $huruf }}..." style="resize:vertical;"></textarea>
+                                </div>
+                            </div>
+
+                            {{-- KOLOM KANAN: INSERT GAMBAR OPSI & PREVIEW (TANPA LABEL GAMBAR A, B, DST.) --}}
+                            <div class="col-12 col-md-5">
+                                <input type="file" class="form-control-file border bg-white p-1 rounded opsi-media-input" accept="image/*">
+                                <input type="hidden" class="opsi-remove-media" value="0">
+                                <small class="form-text text-muted mt-1" style="font-size: 11px;">Gambar opsi (Opsional: JPG, PNG, WEBP maks. 2MB)</small>
+
+                                <div class="opsi-media-preview-container mt-2 position-relative d-inline-block d-none">
+                                    <img src="" class="img-thumbnail opsi-media-preview-img" style="max-height: 95px; width: auto;" alt="Preview Opsi {{ $huruf }}">
+                                    <button type="button" class="btn btn-danger btn-sm position-absolute btn-delete-opsi-media" style="top: 4px; right: 4px; padding: 1px 6px;" title="Hapus Gambar Opsi {{ $huruf }}">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        <textarea class="form-control opsi-teks" rows="1" placeholder="Masukkan teks untuk opsi {{ $huruf }}..." style="resize:vertical;"></textarea>
                     </div>
                     @endforeach
                 </div>
@@ -392,14 +413,26 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             if (['pg', 'pg_kompleks'].includes(data.tipe)) {
-                const opsiTexts = soalItem.querySelectorAll('.opsi-teks');
+                const opsiItems = soalItem.querySelectorAll('.opsi-item');
                 const kunciRadios = soalItem.querySelectorAll('.kunci-radio');
                 const kunciCheckboxes = soalItem.querySelectorAll('.kunci-checkbox');
                 
                 let opsiData = data.opsi_jawaban || [];
+                let opsiMediaData = data.opsi_media || [];
                 let kunciData = (data.kunci_jawaban || []).map(String);
                 
-                opsiTexts.forEach((ta, i) => { if (opsiData[i]) ta.value = opsiData[i]; });
+                opsiItems.forEach((optEl, i) => {
+                    const ta = optEl.querySelector('.opsi-teks');
+                    if (ta && opsiData[i]) ta.value = opsiData[i];
+
+                    if (opsiMediaData[i]) {
+                        const optPrevContainer = optEl.querySelector('.opsi-media-preview-container');
+                        const optPrevImg = optEl.querySelector('.opsi-media-preview-img');
+                        optPrevImg.src = `{{ asset('storage') }}/${opsiMediaData[i]}`;
+                        optPrevContainer.classList.remove('d-none');
+                        optEl.dataset.hasExistingMedia = '1';
+                    }
+                });
                 
                 if (data.tipe === 'pg') {
                     kunciRadios.forEach((r, i) => {
@@ -428,6 +461,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
     window.addSoal = addSoal;
 
+    function syncOpsiRequiredState(soalItem) {
+        const tipe = soalItem.querySelector('.soal-tipe').value;
+        const opsiItems = soalItem.querySelectorAll('.opsi-item');
+
+        opsiItems.forEach((optEl, index) => {
+            const ta = optEl.querySelector('.opsi-teks');
+            const fileInput = optEl.querySelector('.opsi-media-input');
+            const removeInput = optEl.querySelector('.opsi-remove-media');
+            const hasNewFile = fileInput && fileInput.files && fileInput.files.length > 0;
+            const hasExisting = optEl.dataset.hasExistingMedia === '1' && removeInput.value !== '1';
+
+            if (tipe === 'esai') {
+                ta.removeAttribute('required');
+            } else if (index < 2) {
+                if (hasNewFile || hasExisting) {
+                    ta.removeAttribute('required');
+                } else {
+                    ta.setAttribute('required', 'true');
+                }
+            } else {
+                ta.removeAttribute('required');
+            }
+        });
+    }
+
     function setupSoalEvents(item) {
         item.querySelector('.btn-remove-soal').addEventListener('click', function() {
             if (document.querySelectorAll('.soal-item').length > 1) {
@@ -449,6 +507,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
+        // Gambar Utama Soal
         const fileInput = item.querySelector('.soal-media');
         const previewContainer = item.querySelector('.media-preview-container');
         const previewImg = item.querySelector('.media-preview-img');
@@ -473,6 +532,40 @@ document.addEventListener('DOMContentLoaded', function() {
             previewImg.src = "";
             previewContainer.classList.add('d-none');
             removeMediaInput.value = "1";
+        });
+
+        // Gambar per Opsi Jawaban (A-E)
+        item.querySelectorAll('.opsi-item').forEach(optEl => {
+            const optFile = optEl.querySelector('.opsi-media-input');
+            const optPreviewBox = optEl.querySelector('.opsi-media-preview-container');
+            const optPreviewImg = optEl.querySelector('.opsi-media-preview-img');
+            const optRemoveInput = optEl.querySelector('.opsi-remove-media');
+            const btnDeleteOptMedia = optEl.querySelector('.btn-delete-opsi-media');
+
+            optFile.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        optPreviewImg.src = e.target.result;
+                        optPreviewBox.classList.remove('d-none');
+                        optRemoveInput.value = "0";
+                        syncOpsiRequiredState(item);
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    syncOpsiRequiredState(item);
+                }
+            });
+
+            btnDeleteOptMedia.addEventListener('click', function() {
+                optFile.value = "";
+                optPreviewImg.src = "";
+                optPreviewBox.classList.add('d-none');
+                optRemoveInput.value = "1";
+                optEl.dataset.hasExistingMedia = '0';
+                syncOpsiRequiredState(item);
+            });
         });
 
         item.querySelector('.btn-move-up').addEventListener('click', function() {
@@ -516,9 +609,7 @@ document.addEventListener('DOMContentLoaded', function() {
             checkboxes.forEach(el => el.removeAttribute('required'));
         } else {
             opsiWrapper.classList.remove('d-none');
-            opsiTexts.forEach((el, index) => {
-                if(index < 2) el.setAttribute('required', 'true');
-            });
+            syncOpsiRequiredState(item);
 
             if (tipe === 'pg') {
                 radios.forEach(el => { el.classList.remove('d-none'); el.setAttribute('required', 'true'); });
@@ -547,7 +638,12 @@ document.addEventListener('DOMContentLoaded', function() {
             item.querySelector('.soal-media').name = `soals[${index}][media]`;
             item.querySelector('.soal-remove-media').name = `soals[${index}][remove_media]`;
             
-            item.querySelectorAll('.opsi-teks').forEach(el => el.name = `soals[${index}][opsi_jawaban][]`);
+            item.querySelectorAll('.opsi-item').forEach((optEl, optIdx) => {
+                optEl.querySelector('.opsi-teks').name = `soals[${index}][opsi_jawaban][${optIdx}]`;
+                optEl.querySelector('.opsi-media-input').name = `soals[${index}][opsi_media][${optIdx}]`;
+                optEl.querySelector('.opsi-remove-media').name = `soals[${index}][remove_opsi_media][${optIdx}]`;
+            });
+
             item.querySelectorAll('.kunci-radio').forEach(el => el.name = `soals[${index}][kunci_jawaban][]`);
             item.querySelectorAll('.kunci-checkbox').forEach(el => el.name = `soals[${index}][kunci_jawaban][]`);
         });
@@ -627,7 +723,6 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             this.disabled = false;
             if (data.status === 'success' && Array.isArray(data.soals)) {
-                // Jika saat ini hanya ada 1 soal kosong bawaan, hapus dulu sebelum muat hasil import
                 const items = document.querySelectorAll('.soal-item');
                 if (items.length === 1 && !items[0].querySelector('.soal-id').value && items[0].querySelector('.soal-pertanyaan').value.trim() === '') {
                     items[0].remove();

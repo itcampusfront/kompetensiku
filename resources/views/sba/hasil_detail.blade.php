@@ -185,11 +185,20 @@
                         {{-- PERTANYAAN --}}
                         <p class="text-dark font-weight-bold mb-3">{!! nl2br(e($soal->pertanyaan)) !!}</p>
 
-                        {{-- TIPE PG & PG KOMPLEKS --}}
+                        {{-- TIPE PG & PG KOMPLEKS (TEKS &/ATAU GAMBAR OPSI) --}}
                         @if(in_array($soal->tipe, ['pg', 'pg_kompleks']))
+                            @php
+                                $opsiTeksList = is_array($soal->opsi_jawaban) ? $soal->opsi_jawaban : [];
+                                $opsiMediaList = is_array($soal->opsi_media) ? $soal->opsi_media : [];
+                                $jumlahSlotOpsi = max(count($opsiTeksList), count($opsiMediaList));
+                            @endphp
                             <div class="options-wrapper">
-                                @foreach($soal->opsi_jawaban as $optIdx => $opsiTeks)
-                                    @if(!empty(trim($opsiTeks)))
+                                @for($optIdx = 0; $optIdx < $jumlahSlotOpsi; $optIdx++)
+                                    @php
+                                        $opsiTeks = trim((string) ($opsiTeksList[$optIdx] ?? ''));
+                                        $opsiMediaPath = $opsiMediaList[$optIdx] ?? null;
+                                    @endphp
+                                    @if($opsiTeks !== '' || !empty($opsiMediaPath))
                                         @php
                                             $isKunci = in_array((string)$optIdx, array_map('strval', $kunciArray));
                                             
@@ -206,11 +215,21 @@
                                             elseif ($isChosen && !$isKunci) $boxClass .= ' option-wrong';
                                         @endphp
 
-                                        <div class="{{ $boxClass }} d-flex justify-content-between align-items-center">
-                                            <div class="text-dark small">
-                                                <strong class="mr-2">{{ chr(65 + $optIdx) }}.</strong> {{ $opsiTeks }}
+                                        <div class="{{ $boxClass }} d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+                                            <div class="text-dark small d-flex align-items-start flex-grow-1 mb-2 mb-md-0">
+                                                <strong class="mr-2">{{ chr(65 + $optIdx) }}.</strong>
+                                                <div>
+                                                    @if($opsiTeks !== '')
+                                                        <div>{!! nl2br(e($opsiTeks)) !!}</div>
+                                                    @endif
+                                                    @if(!empty($opsiMediaPath))
+                                                        <div class="{{ $opsiTeks !== '' ? 'mt-2' : '' }}">
+                                                            <img src="{{ asset('storage/' . $opsiMediaPath) }}" alt="Gambar Opsi {{ chr(65 + $optIdx) }}" class="img-thumbnail" style="max-height: 130px;">
+                                                        </div>
+                                                    @endif
+                                                </div>
                                             </div>
-                                            <div>
+                                            <div class="flex-shrink-0">
                                                 @if($isKunci)
                                                     <span class="badge-kunci mr-1"><i class="fa fa-key"></i> Kunci</span>
                                                 @endif
@@ -220,7 +239,7 @@
                                             </div>
                                         </div>
                                     @endif
-                                @endforeach
+                                @endfor
                             </div>
 
                         {{-- TIPE ESAI / URAIAN (PANEL KOREKSI PENGUJI) --}}

@@ -17,10 +17,12 @@
         .soal-card { border: 1px solid #ddd; margin-bottom: 15px; padding: 12px; border-radius: 5px; page-break-inside: avoid; }
         .soal-header { font-weight: bold; font-size: 10pt; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 8px; color: #2c3e50; }
         .pertanyaan { margin-bottom: 10px; font-size: 10.5pt; }
+        .soal-img { max-height: 160px; max-width: 100%; margin-bottom: 10px; border: 1px solid #ddd; padding: 2px; border-radius: 3px; }
         
         .opsi-box { border: 1px solid #e0e0e0; padding: 6px 10px; margin-bottom: 4px; border-radius: 3px; font-size: 9.5pt; }
         .opsi-correct { background-color: #e8f5e9; border-color: #a5d6a7; font-weight: bold; }
         .opsi-wrong { background-color: #ffebee; border-color: #ef9a9a; }
+        .opsi-img { max-height: 90px; max-width: 240px; margin-top: 4px; display: block; border: 1px solid #ccc; padding: 2px; background: #fff; }
         
         .badge { display: inline-block; padding: 2px 6px; font-size: 8pt; font-weight: bold; border-radius: 3px; float: right; }
         .badge-success { background-color: #4caf50; color: #fff; }
@@ -32,6 +34,21 @@
 </head>
 <body>
 
+    @php
+        $resolvePdfImage = function (?string $storagePath): ?string {
+            if (empty($storagePath)) {
+                return null;
+            }
+            $fullPath = public_path('storage/' . ltrim($storagePath, '/'));
+            if (!file_exists($fullPath)) {
+                return null;
+            }
+            $mime = mime_content_type($fullPath) ?: 'image/jpeg';
+            $data = base64_encode(file_get_contents($fullPath));
+            return "data:{$mime};base64,{$data}";
+        };
+    @endphp
+
     <div class="header">
         <h2>LEMBAR HASIL ASESMEN DIGITAL (SBA)</h2>
         <p>Kode Uji: {{ strtoupper($hasil->uji->kode_uji) }} | Judul: {{ $hasil->uji->judul }}</p>
@@ -40,7 +57,7 @@
     <table class="info-table">
         <tr>
             <td class="label">Nama Peserta</td>
-            <td class="value">{{ $hasil->asesi ? $hasil->asesi->name : ($hasil->nama_peserta_publik ?? 'Guest') }}</td>
+            <td class="value">{{ $hasil->asesi ? ($hasil->asesi->nama_user ?? $hasil->asesi->name) : ($hasil->nama_peserta_publik ?? 'Guest') }}</td>
             <td class="label">Total Skor Akhir</td>
             <td class="value"><strong>{{ number_format($hasil->total_skor, 0) }} / 100 Poin</strong></td>
         </tr>
@@ -66,6 +83,7 @@
             $jawabanRaw = $jawabanSiswa ? $jawabanSiswa->jawaban : null;
             $skorDidapat = $jawabanSiswa ? $jawabanSiswa->skor_didapat : 0;
             $kunciArray = $soal->kunci_jawaban ?? [];
+            $soalImgSrc = $resolvePdfImage($soal->media ?? null);
         @endphp
 
         <div class="soal-card">
@@ -84,15 +102,31 @@
 
             <div class="pertanyaan">{!! nl2br(e($soal->pertanyaan)) !!}</div>
 
+            @if($soalImgSrc)
+                <div>
+                    <img src="{{ $soalImgSrc }}" alt="Gambar Soal" class="soal-img">
+                </div>
+            @endif
+
             @if(in_array($soal->tipe, ['pg', 'pg_kompleks']))
-                @foreach($soal->opsi_jawaban as $optIdx => $opsiTeks)
-                    @if(!empty(trim($opsiTeks)))
+                @php
+                    $opsiTeksList = is_array($soal->opsi_jawaban) ? $soal->opsi_jawaban : [];
+                    $opsiMediaList = is_array($soal->opsi_media) ? $soal->opsi_media : [];
+                    $jumlahSlotOpsi = max(count($opsiTeksList), count($opsiMediaList));
+                @endphp
+
+                @for($optIdx = 0; $optIdx < $jumlahSlotOpsi; $optIdx++)
+                    @php
+                        $opsiTeks = trim((string) ($opsiTeksList[$optIdx] ?? ''));
+                        $opsiImgSrc = $resolvePdfImage($opsiMediaList[$optIdx] ?? null);
+                    @endphp
+                    @if($opsiTeks !== '' || $opsiImgSrc)
                         @php
-                            $isKunci = in_array((string)$optIdx, $kunciArray);
+                            $isKunci = in_array((string)$optIdx, array_map('strval', $kunciArray));
                             $isChosen = false;
                             if ($soal->tipe === 'pg_kompleks') {
                                 $siswaArr = json_decode($jawabanRaw, true) ?? [];
-                                $isChosen = in_array((string)$optIdx, $siswaArr);
+                                $isChosen = in_array((string)$optIdx, array_map('strval', $siswaArr));
                             } else {
                                 $isChosen = ((string)$optIdx === (string)$jawabanRaw && $jawabanRaw !== null);
                             }
@@ -103,12 +137,19 @@
                         @endphp
 
                         <div class="{{ $boxClass }}">
-                            <strong>{{ chr(65 + $optIdx) }}.</strong> {{ $opsiTeks }}
+                            <strong>{{ chr(65 + $optIdx) }}.</strong>
+                            @if($opsiTeks !== '')
+                                {{ $opsiTeks }}
+                            @endif
                             @if($isKunci) [KUNCI BENAR] @endif
                             @if($isChosen) &laquo; (Pilihan Asesi) @endif
+
+                            @if($opsiImgSrc)
+                                <img src="{{ $opsiImgSrc }}" alt="Gambar Opsi {{ chr(65 + $optIdx) }}" class="opsi-img">
+                            @endif
                         </div>
                     @endif
-                @endforeach
+                @endfor
             @elseif($soal->tipe === 'esai')
                 <div class="jawaban-esai">
                     <strong>Jawaban Uraian Asesi:</strong><br>

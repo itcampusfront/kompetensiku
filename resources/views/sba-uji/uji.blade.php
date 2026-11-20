@@ -134,6 +134,16 @@
             color: #ffffff;
         }
 
+        .opsi-media-img {
+            max-height: 180px;
+            max-width: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            background-color: #fff;
+            padding: 4px;
+        }
+
         /* Grid Navigasi Soal */
         .nav-grid-btn {
             width: 44px;
@@ -327,6 +337,9 @@
                                 $savedVal = $savedItem ? $savedItem->jawaban : null;
                                 $isSavedRagu = $savedItem ? (bool) $savedItem->ragu_ragu : false;
                                 $savedArr = ($soal->tipe === 'pg_kompleks' && $savedVal) ? (json_decode($savedVal, true) ?? []) : [];
+                                $opsiTeksList = is_array($soal->opsi_jawaban) ? $soal->opsi_jawaban : [];
+                                $opsiMediaList = is_array($soal->opsi_media) ? $soal->opsi_media : [];
+                                $jumlahSlotOpsi = max(count($opsiTeksList), count($opsiMediaList));
                             @endphp
 
                             <div class="card card-custom soal-item-pane mb-4 {{ $index === 0 ? '' : 'd-none' }}" data-index="{{ $index }}" data-soal-id="{{ $soal->id }}">
@@ -352,42 +365,68 @@
                                         {!! nl2br(e($soal->pertanyaan)) !!}
                                     </div>
 
-                                    {{-- 3. OPSI JAWABAN (DENGAN PEMULIHAN JAWABAN TERSIMPAN) --}}
+                                    {{-- 3. OPSI JAWABAN (TEKS &/ATAU GAMBAR + PEMULIHAN JAWABAN TERSIMPAN) --}}
                                     <div class="options-container">
                                         @if($soal->tipe === 'pg')
-                                            @foreach($soal->opsi_jawaban as $optIndex => $opsiTeks)
-                                                @if(!empty(trim($opsiTeks)))
+                                            @for($optIndex = 0; $optIndex < $jumlahSlotOpsi; $optIndex++)
+                                                @php
+                                                    $opsiTeks = trim((string) ($opsiTeksList[$optIndex] ?? ''));
+                                                    $opsiMediaPath = $opsiMediaList[$optIndex] ?? null;
+                                                @endphp
+                                                @if($opsiTeks !== '' || !empty($opsiMediaPath))
                                                     @php
                                                         $isChecked = ($savedVal !== null && (string) $savedVal === (string) $optIndex);
                                                     @endphp
                                                     <div class="option-card d-flex align-items-center {{ $isChecked ? 'selected-option' : '' }}">
                                                         <input class="form-check-input d-none radio-jawaban" type="radio" name="jawaban_{{ $soal->id }}" value="{{ $optIndex }}" id="opt_{{ $soal->id }}_{{ $optIndex }}" data-soal-id="{{ $soal->id }}" {{ $isChecked ? 'checked' : '' }}>
-                                                        <label class="w-100 d-flex align-items-center m-0 cursor-pointer text-dark" for="opt_{{ $soal->id }}_{{ $optIndex }}">
+                                                        <label class="w-100 d-flex align-items-center m-0 text-dark" style="cursor: pointer;" for="opt_{{ $soal->id }}_{{ $optIndex }}">
                                                             <div class="option-badge">{{ chr(65 + $optIndex) }}</div>
-                                                            <div class="flex-grow-1">{{ $opsiTeks }}</div>
+                                                            <div class="flex-grow-1">
+                                                                @if($opsiTeks !== '')
+                                                                    <div>{!! nl2br(e($opsiTeks)) !!}</div>
+                                                                @endif
+                                                                @if(!empty($opsiMediaPath))
+                                                                    <div class="{{ $opsiTeks !== '' ? 'mt-2' : '' }}">
+                                                                        <img src="{{ asset('storage/' . $opsiMediaPath) }}" alt="Gambar Opsi {{ chr(65 + $optIndex) }}" class="opsi-media-img">
+                                                                    </div>
+                                                                @endif
+                                                            </div>
                                                         </label>
                                                     </div>
                                                 @endif
-                                            @endforeach
+                                            @endfor
 
                                         @elseif($soal->tipe === 'pg_kompleks')
                                             <div class="alert alert-info py-2 px-3 text-xs mb-3 border-0 bg-info bg-opacity-10 text-info fw-bold">
                                                 <i class="fas fa-info-circle me-1"></i> Jawaban kompleks: Pilih satu atau lebih pilihan yang menurut Anda benar.
                                             </div>
-                                            @foreach($soal->opsi_jawaban as $optIndex => $opsiTeks)
-                                                @if(!empty(trim($opsiTeks)))
+                                            @for($optIndex = 0; $optIndex < $jumlahSlotOpsi; $optIndex++)
+                                                @php
+                                                    $opsiTeks = trim((string) ($opsiTeksList[$optIndex] ?? ''));
+                                                    $opsiMediaPath = $opsiMediaList[$optIndex] ?? null;
+                                                @endphp
+                                                @if($opsiTeks !== '' || !empty($opsiMediaPath))
                                                     @php
                                                         $isChecked = in_array((string) $optIndex, array_map('strval', $savedArr));
                                                     @endphp
                                                     <div class="option-card d-flex align-items-center {{ $isChecked ? 'selected-option' : '' }}">
-                                                        <input class="form-check-input me-3 checkbox-jawaban" type="checkbox" name="jawaban_{{ $soal->id }}[]" value="{{ $optIndex }}" id="opt_{{ $soal->id }}_{{ $optIndex }}" data-soal-id="{{ $soal->id }}" style="transform: scale(1.2);" {{ $isChecked ? 'checked' : '' }}>
-                                                        <label class="w-100 d-flex align-items-center m-0 cursor-pointer text-dark" for="opt_{{ $soal->id }}_{{ $optIndex }}">
+                                                        <input class="form-check-input me-3 checkbox-jawaban" type="checkbox" name="jawaban_{{ $soal->id }}[]" value="{{ $optIndex }}" id="opt_{{ $soal->id }}_{{ $optIndex }}" data-soal-id="{{ $soal->id }}" style="transform: scale(1.2); cursor: pointer;" {{ $isChecked ? 'checked' : '' }}>
+                                                        <label class="w-100 d-flex align-items-center m-0 text-dark" style="cursor: pointer;" for="opt_{{ $soal->id }}_{{ $optIndex }}">
                                                             <div class="option-badge">{{ chr(65 + $optIndex) }}</div>
-                                                            <div class="flex-grow-1">{{ $opsiTeks }}</div>
+                                                            <div class="flex-grow-1">
+                                                                @if($opsiTeks !== '')
+                                                                    <div>{!! nl2br(e($opsiTeks)) !!}</div>
+                                                                @endif
+                                                                @if(!empty($opsiMediaPath))
+                                                                    <div class="{{ $opsiTeks !== '' ? 'mt-2' : '' }}">
+                                                                        <img src="{{ asset('storage/' . $opsiMediaPath) }}" alt="Gambar Opsi {{ chr(65 + $optIndex) }}" class="opsi-media-img">
+                                                                    </div>
+                                                                @endif
+                                                            </div>
                                                         </label>
                                                     </div>
                                                 @endif
-                                            @endforeach
+                                            @endfor
 
                                         @elseif($soal->tipe === 'esai')
                                             <div class="form-group">
@@ -405,7 +444,7 @@
                                     
                                     <div class="form-check d-flex align-items-center m-0">
                                         <input class="form-check-input me-2 check-ragu" type="checkbox" id="ragu_{{ $soal->id }}" data-soal-id="{{ $soal->id }}" style="transform: scale(1.2); cursor: pointer;" {{ $isSavedRagu ? 'checked' : '' }}>
-                                        <label class="form-check-label text-xs fw-bold text-warning cursor-pointer" for="ragu_{{ $soal->id }}">
+                                        <label class="form-check-label text-xs fw-bold text-warning" style="cursor: pointer;" for="ragu_{{ $soal->id }}">
                                             Ragu-Ragu
                                         </label>
                                     </div>
@@ -557,14 +596,12 @@
             const btnKembaliUjian = document.getElementById('btnKembaliUjian');
             
             let isUjianDimulai = false;
-            let isLockedGagal = false; // Flag pengunci jika diskualifikasi
+            let isLockedGagal = false;
             let isSubmittingFinal = false;
 
-            // Sinkronisasi sisa waktu langsung dari waktu server saat halaman dimuat
             const initialRemainingSeconds = {{ $sisaDetikAwal !== null ? (int) $sisaDetikAwal : 'null' }};
             const clientPageLoadTimestamp = Date.now();
 
-            // Deteksi perangkat iOS (iPhone / iPad) & dukungan Fullscreen API browser
             const docEl = document.documentElement;
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
                 (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -573,7 +610,6 @@
                 (document.fullscreenEnabled || document.webkitFullscreenEnabled || document.msFullscreenEnabled)
             );
 
-            // Penyesuaian UI untuk perangkat non-fullscreen (seperti iPhone/iPad)
             if (!supportsFullscreen) {
                 if (btnFullscreen) {
                     btnFullscreen.classList.add('d-none');
@@ -648,7 +684,7 @@
             // --- 4. SYSTEM DETEKSI PELANGGARAN STRICT MODE ---
             let sedangMelapor = false;
             let waktuPelanggaranTerakhir = 0;
-            const jedaPelanggaranMs = 2500; // Cooldown anti-cascading
+            const jedaPelanggaranMs = 2500;
 
             const modalPelanggaranEl = document.getElementById('modalPelanggaran');
             const bsModalPelanggaran = new bootstrap.Modal(modalPelanggaranEl);
@@ -670,7 +706,6 @@
             function laporkanPelanggaran(tipeSpesifik = '') {
                 const sekarang = new Date().getTime();
 
-                // Jangan laporkan jika ujian belum mulai, sedang finalisasi, sedang gagal/terkunci, sedang melapor, atau masih dalam jeda cooldown
                 if (!isUjianDimulai || isSubmittingFinal || isLockedGagal || sedangMelapor || (sekarang - waktuPelanggaranTerakhir < jedaPelanggaranMs)) {
                     return;
                 }
@@ -718,14 +753,12 @@
                 window.location.href = "{{ route('sba.portal') }}";
             });
 
-            // Berlaku di semua perangkat (PC, Android, maupun iPhone/iPad) saat pindah tab / aplikasi / Home Screen
             document.addEventListener("visibilitychange", function() {
                 if (document.hidden) {
                     laporkanPelanggaran('pindah_tab');
                 }
             });
 
-            // Khusus perangkat desktop / browser yang mendukung fullscreen penuh
             if (supportsFullscreen) {
                 window.addEventListener('blur', function() {
                     if (!document.hidden) {
@@ -746,7 +779,6 @@
                 });
             }
 
-            // Mencegat submit manual finalisasi jika user terkena diskualifikasi
             document.getElementById('form-finalisasi')?.addEventListener('submit', function(e) {
                 if (isLockedGagal) {
                     e.preventDefault();
@@ -765,7 +797,6 @@
             function switchSoal(targetIndex) {
                 if (isLockedGagal) return;
 
-                // PENGECEKAN FULLSCREEN SETIAP PERPINDAHAN SOAL
                 if (supportsFullscreen && isUjianDimulai && !isSedangFullscreen()) {
                     laporkanPelanggaran('ganti_soal_non_fullscreen');
                 }

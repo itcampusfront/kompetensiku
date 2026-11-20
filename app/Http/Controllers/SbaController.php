@@ -79,17 +79,19 @@ class SbaController extends Controller
         ]);
 
         $request->validate([
-            'judul'                 => 'required|string|max:255',
-            'kode_uji'              => 'required|string|max:20|alpha_num|unique:ujis,kode_uji',
-            'durasi_menit'          => 'required|integer|min:0',
-            'toleransi_pelanggaran' => 'required|integer|min:1',
-            'waktu_mulai'           => 'nullable|date',
-            'waktu_selesai'         => 'nullable|date|after_or_equal:waktu_mulai',
-            'maksimal_percobaan'    => 'nullable|integer|min:1',
-            'soals'                 => 'required|array|min:1',
-            'soals.*.pertanyaan'    => 'required|string',
-            'soals.*.tipe'          => 'required|in:pg,pg_kompleks,esai',
-            'soals.*.media'         => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'judul'                   => 'required|string|max:255',
+            'kode_uji'                => 'required|string|max:20|alpha_num|unique:ujis,kode_uji',
+            'durasi_menit'            => 'required|integer|min:0',
+            'toleransi_pelanggaran'   => 'required|integer|min:1',
+            'waktu_mulai'             => 'nullable|date',
+            'waktu_selesai'           => 'nullable|date|after_or_equal:waktu_mulai',
+            'maksimal_percobaan'      => 'nullable|integer|min:1',
+            'soals'                   => 'required|array|min:1',
+            'soals.*.pertanyaan'      => 'required|string',
+            'soals.*.tipe'            => 'required|in:pg,pg_kompleks,esai',
+            'soals.*.media'           => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'soals.*.opsi_media'      => 'nullable|array',
+            'soals.*.opsi_media.*'    => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ], [
             'kode_uji.unique'    => 'Kode Asesmen sudah digunakan oleh ujian lain. Silakan gunakan kode berbeda.',
             'kode_uji.alpha_num' => 'Kode Asesmen hanya boleh berisi huruf dan angka tanpa spasi.',
@@ -114,12 +116,24 @@ class SbaController extends Controller
             'status'                => $request->status ?? 'draft',
         ]);
 
-        // 2. Simpan Setiap Soal & File Media (Jika Ada)
+        // 2. Simpan Setiap Soal & File Media (Soal + Opsi Jawaban)
         foreach ($request->soals as $index => $soalData) {
             $pathMedia = null;
 
             if ($request->hasFile("soals.{$index}.media")) {
                 $pathMedia = $request->file("soals.{$index}.media")->store('soal-images', 'public');
+            }
+
+            $opsiMediaPaths = null;
+            if (in_array($soalData['tipe'], ['pg', 'pg_kompleks'])) {
+                $opsiMediaPaths = [];
+                for ($optIdx = 0; $optIdx < 5; $optIdx++) {
+                    if ($request->hasFile("soals.{$index}.opsi_media.{$optIdx}")) {
+                        $opsiMediaPaths[$optIdx] = $request->file("soals.{$index}.opsi_media.{$optIdx}")->store('soal-opsi-images', 'public');
+                    } else {
+                        $opsiMediaPaths[$optIdx] = null;
+                    }
+                }
             }
 
             UjiSoal::create([
@@ -128,6 +142,7 @@ class SbaController extends Controller
                 'pertanyaan'    => $soalData['pertanyaan'],
                 'media'         => $pathMedia,
                 'opsi_jawaban'  => isset($soalData['opsi_jawaban']) ? array_values($soalData['opsi_jawaban']) : null,
+                'opsi_media'    => $opsiMediaPaths,
                 'kunci_jawaban' => isset($soalData['kunci_jawaban']) ? (array) $soalData['kunci_jawaban'] : null,
                 'bobot_nilai'   => $soalData['bobot_nilai'] ?? 10,
             ]);
@@ -145,17 +160,19 @@ class SbaController extends Controller
         ]);
 
         $request->validate([
-            'judul'                 => 'required|string|max:255',
-            'kode_uji'              => 'required|string|max:20|alpha_num|unique:ujis,kode_uji,' . $uji->id,
-            'durasi_menit'          => 'required|integer|min:0',
-            'toleransi_pelanggaran' => 'required|integer|min:1',
-            'waktu_mulai'           => 'nullable|date',
-            'waktu_selesai'         => 'nullable|date|after_or_equal:waktu_mulai',
-            'maksimal_percobaan'    => 'nullable|integer|min:1',
-            'soals'                 => 'required|array|min:1',
-            'soals.*.pertanyaan'    => 'required|string',
-            'soals.*.tipe'          => 'required|in:pg,pg_kompleks,esai',
-            'soals.*.media'         => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'judul'                   => 'required|string|max:255',
+            'kode_uji'                => 'required|string|max:20|alpha_num|unique:ujis,kode_uji,' . $uji->id,
+            'durasi_menit'            => 'required|integer|min:0',
+            'toleransi_pelanggaran'   => 'required|integer|min:1',
+            'waktu_mulai'             => 'nullable|date',
+            'waktu_selesai'           => 'nullable|date|after_or_equal:waktu_mulai',
+            'maksimal_percobaan'      => 'nullable|integer|min:1',
+            'soals'                   => 'required|array|min:1',
+            'soals.*.pertanyaan'      => 'required|string',
+            'soals.*.tipe'            => 'required|in:pg,pg_kompleks,esai',
+            'soals.*.media'           => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'soals.*.opsi_media'      => 'nullable|array',
+            'soals.*.opsi_media.*'    => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ], [
             'kode_uji.unique'    => 'Kode Asesmen sudah digunakan oleh ujian lain. Silakan gunakan kode berbeda.',
             'kode_uji.alpha_num' => 'Kode Asesmen hanya boleh berisi huruf dan angka tanpa spasi.',
@@ -190,7 +207,7 @@ class SbaController extends Controller
 
             $pathMedia = $soalEksis->media;
 
-            // Cek jika ada request hapus gambar eksisting
+            // Cek jika ada request hapus gambar soal eksisting
             if (isset($soalData['remove_media']) && $soalData['remove_media'] == '1') {
                 if ($pathMedia && Storage::disk('public')->exists($pathMedia)) {
                     Storage::disk('public')->delete($pathMedia);
@@ -198,12 +215,47 @@ class SbaController extends Controller
                 $pathMedia = null;
             }
 
-            // Cek jika ada file gambar baru yang diunggah
+            // Cek jika ada file gambar soal baru yang diunggah
             if ($request->hasFile("soals.{$index}.media")) {
                 if ($pathMedia && Storage::disk('public')->exists($pathMedia)) {
                     Storage::disk('public')->delete($pathMedia);
                 }
                 $pathMedia = $request->file("soals.{$index}.media")->store('soal-images', 'public');
+            }
+
+            // Kelola Gambar Opsi Jawaban (A-E)
+            $existingOpsiMedia = is_array($soalEksis->opsi_media) ? $soalEksis->opsi_media : [];
+            $removeOpsiFlags = $soalData['remove_opsi_media'] ?? [];
+            $opsiMediaPaths = null;
+
+            if (in_array($soalData['tipe'], ['pg', 'pg_kompleks'])) {
+                $opsiMediaPaths = [];
+                for ($optIdx = 0; $optIdx < 5; $optIdx++) {
+                    $currentOptPath = $existingOpsiMedia[$optIdx] ?? null;
+
+                    if (isset($removeOpsiFlags[$optIdx]) && $removeOpsiFlags[$optIdx] == '1') {
+                        if ($currentOptPath && Storage::disk('public')->exists($currentOptPath)) {
+                            Storage::disk('public')->delete($currentOptPath);
+                        }
+                        $currentOptPath = null;
+                    }
+
+                    if ($request->hasFile("soals.{$index}.opsi_media.{$optIdx}")) {
+                        if ($currentOptPath && Storage::disk('public')->exists($currentOptPath)) {
+                            Storage::disk('public')->delete($currentOptPath);
+                        }
+                        $currentOptPath = $request->file("soals.{$index}.opsi_media.{$optIdx}")->store('soal-opsi-images', 'public');
+                    }
+
+                    $opsiMediaPaths[$optIdx] = $currentOptPath;
+                }
+            } else {
+                // Jika tipe soal diubah ke Esai, hapus sisa file gambar opsi jika ada
+                foreach ($existingOpsiMedia as $oldOptPath) {
+                    if (!empty($oldOptPath) && Storage::disk('public')->exists($oldOptPath)) {
+                        Storage::disk('public')->delete($oldOptPath);
+                    }
+                }
             }
 
             $soalEksis->fill([
@@ -212,6 +264,7 @@ class SbaController extends Controller
                 'pertanyaan'    => $soalData['pertanyaan'],
                 'media'         => $pathMedia,
                 'opsi_jawaban'  => isset($soalData['opsi_jawaban']) ? array_values($soalData['opsi_jawaban']) : null,
+                'opsi_media'    => $opsiMediaPaths,
                 'kunci_jawaban' => isset($soalData['kunci_jawaban']) ? (array) $soalData['kunci_jawaban'] : null,
                 'bobot_nilai'   => $soalData['bobot_nilai'] ?? 10,
             ]);
@@ -223,7 +276,7 @@ class SbaController extends Controller
     }
 
     /**
-     * Duplikat Ujian Beserta Seluruh Butir Soal & Gambar Media
+     * Duplikat Ujian Beserta Seluruh Butir Soal & Gambar Media (Soal + Opsi Jawaban)
      */
     public function duplicate($id)
     {
@@ -259,12 +312,28 @@ class SbaController extends Controller
                 Storage::disk('public')->copy($soal->media, $mediaBaru);
             }
 
+            $opsiMediaBaru = null;
+            if (is_array($soal->opsi_media)) {
+                $opsiMediaBaru = [];
+                foreach ($soal->opsi_media as $optIdx => $optPath) {
+                    if (!empty($optPath) && Storage::disk('public')->exists($optPath)) {
+                        $extOpt = pathinfo($optPath, PATHINFO_EXTENSION);
+                        $copyOptPath = 'soal-opsi-images/' . Str::random(40) . ($extOpt ? '.' . $extOpt : '');
+                        Storage::disk('public')->copy($optPath, $copyOptPath);
+                        $opsiMediaBaru[$optIdx] = $copyOptPath;
+                    } else {
+                        $opsiMediaBaru[$optIdx] = null;
+                    }
+                }
+            }
+
             UjiSoal::create([
                 'uji_id'        => $ujiBaru->id,
                 'tipe'          => $soal->tipe,
                 'pertanyaan'    => $soal->pertanyaan,
                 'media'         => $mediaBaru,
                 'opsi_jawaban'  => $soal->opsi_jawaban,
+                'opsi_media'    => $opsiMediaBaru,
                 'kunci_jawaban' => $soal->kunci_jawaban,
                 'bobot_nilai'   => $soal->bobot_nilai,
             ]);
@@ -360,7 +429,6 @@ class SbaController extends Controller
         try {
             $rawContent = file_get_contents($path);
 
-            // Deteksi apakah file .xls sebenarnya berbasis HTML table (hasil export template)
             if (stripos($rawContent, '<table') !== false) {
                 $dom = new \DOMDocument();
                 @$dom->loadHTML('<?xml encoding="utf-8" ?>' . $rawContent);
@@ -411,7 +479,7 @@ class SbaController extends Controller
         $parsedSoals = [];
 
         foreach ($rows as $idx => $row) {
-            if ($idx === 0) continue; // Lewati baris header
+            if ($idx === 0) continue;
 
             $tipeRaw = strtolower(trim((string) ($row[0] ?? 'pg')));
             $pertanyaan = trim((string) ($row[1] ?? ''));
@@ -505,7 +573,6 @@ class SbaController extends Controller
     {
         $uji = Uji::findOrFail($uji_id);
 
-        // Pemanggilan Query Utama
         $hasils = $this->getFilteredHasilQuery($request, $uji->id)
             ->paginate((int) $request->get('per_page', 10))
             ->withQueryString();
@@ -520,7 +587,6 @@ class SbaController extends Controller
     {
         $query = UjiHasil::where('uji_id', $uji_id)->with('asesi');
 
-        // Filter Search (Asesi ID, Nama Peserta Publik, Nama User)
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
@@ -532,12 +598,10 @@ class SbaController extends Controller
             });
         }
 
-        // Filter Status Pengerjaan
         if ($request->filled('status_pengerjaan')) {
             $query->where('status_pengerjaan', $request->status_pengerjaan);
         }
 
-        // Filter Tanggal Mulai Pengerjaan
         if ($request->filled('tgl_mulai')) {
             $query->whereDate('waktu_mulai', '>=', $request->tgl_mulai);
         }
@@ -545,7 +609,6 @@ class SbaController extends Controller
             $query->whereDate('waktu_mulai', '<=', $request->tgl_selesai);
         }
 
-        // Checkbox: Sembunyikan Identitas Ganda (Ambil Percobaan Terbaru)
         if ($request->has('hide_duplicates') && $request->hide_duplicates == '1') {
             $subLatestIds = UjiHasil::where('uji_id', $uji_id)
                 ->selectRaw('MAX(id) as max_id')
@@ -555,7 +618,6 @@ class SbaController extends Controller
             $query->whereIn('id', $subLatestIds);
         }
 
-        // Sorting Kolom (Default: total_skor DESC)
         $sortBy = $request->get('sort_by', 'total_skor');
         $sortOrder = $request->get('sort_order', 'desc');
         $allowedSorts = ['id', 'asesi_id', 'total_skor', 'waktu_mulai', 'status_pengerjaan'];
@@ -586,7 +648,6 @@ class SbaController extends Controller
             return $pdf->download("Rekap_Hasil_{$uji->kode_uji}.pdf");
         }
 
-        // Export format Microsoft Excel (.xls) via HTML Spreadsheet Stream
         $fileName = "Rekap_Hasil_{$uji->kode_uji}.xls";
         
         $headers = [

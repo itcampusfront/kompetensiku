@@ -361,12 +361,26 @@ class SbaUjiController extends Controller
     // ======================================================================
     public function selesaiUjian(Request $request, $uji_id)
     {
-        $hasilId = session('sba_hasil_id');
         $uji = Uji::with('soals')->findOrFail($uji_id);
-        $hasil = UjiHasil::with('jawabans')->where('id', $hasilId)->where('uji_id', $uji->id)->firstOrFail();
+        $hasilId = session('sba_hasil_id') ?? $request->input('hasil_id');
+
+        $hasil = UjiHasil::with('jawabans')
+            ->where('id', $hasilId)
+            ->where('uji_id', $uji->id)
+            ->first();
+
+        if (!$hasil) {
+            return redirect()->route('sba.portal')->with('error', 'Data sesi ujian tidak ditemukan.');
+        }
+
+        // Jika sudah selesai (akibat double-tap / auto-submit bersamaan), langsung tampilkan hasil
+        if (in_array($hasil->status_pengerjaan, ['selesai', 'final'])) {
+            session()->forget(['sba_hasil_id', 'sba_uji_id', 'sba_kode_uji', 'sba_mode', 'sba_peserta_id', 'sba_peserta_nama']);
+            return redirect()->route('sba.uji.selesai.tampil', ['uji_id' => $uji->id, 'hasil_id' => $hasil->id]);
+        }
 
         if ($hasil->status_pengerjaan !== 'berlangsung') {
-            return redirect()->route('sba.portal')->with('error', 'Ujian sudah diselesaikan sebelumnya.');
+            return redirect()->route('sba.portal')->with('error', 'Sesi ujian tidak valid atau dihentikan.');
         }
 
         $totalSkorOtomatis = $this->hitungSkorOtomatis($uji, $hasil);
