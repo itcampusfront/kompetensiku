@@ -102,7 +102,7 @@
                             <tr>
                                 <th width="5%">No</th>
                                 <th width="15%"><a href="{{ getSortUrl('kode_uji') }}" class="text-dark">Kode Uji {!! getSortIcon('kode_uji') !!}</a></th>
-                                <th width="30%"><a href="{{ getSortUrl('judul') }}" class="text-dark">Judul / Deskripsi {!! getSortIcon('judul') !!}</a></th>
+                                <th width="30%"><a href="{{ getSortUrl('judul') }}" class="text-dark">Judul / Jumlah Soal {!! getSortIcon('judul') !!}</a></th>
                                 <th width="15%"><a href="{{ getSortUrl('user_id') }}" class="text-dark">Author {!! getSortIcon('user_id') !!}</a></th>
                                 <th width="15%"><a href="{{ getSortUrl('waktu_mulai') }}" class="text-dark">Waktu / Durasi {!! getSortIcon('waktu_mulai') !!}</a></th>
                                 <th width="10%" class="text-center"><a href="{{ getSortUrl('status') }}" class="text-dark">Status {!! getSortIcon('status') !!}</a></th>
@@ -120,13 +120,9 @@
                                 
                                 <td>
                                     <strong>{{ $uji->judul }}</strong><br>
-                                    <small class="text-muted">
-                                        @if($uji->deskripsi)
-                                            {{ Str::limit(strip_tags($uji->deskripsi), 30, '...') }}
-                                        @else
-                                            <em>Tidak ada deskripsi</em>
-                                        @endif
-                                    </small>
+                                    <span class="badge badge-info mt-1">
+                                        <i class="fa fa-list-ol mr-1"></i> {{ $uji->soals_count ?? 0 }} Soal
+                                    </span>
                                 </td>
                                 
                                 <td>
