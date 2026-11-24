@@ -11,21 +11,21 @@ use App\Http\Controllers\SbaUjiController;
 */
 
 // ==============================================================================
-// 1. ADMIN & GURU MANAGEMENT ROUTES (Memerlukan Login / Protected)
+// 1. ADMIN & PENGUJI MANAGEMENT ROUTES (Memerlukan Login / Protected)
 // ==============================================================================
 Route::middleware(['auth'])->group(function () {
     
-    // Group Admin/Guru SBA (URL Prefix: /admin/sba, Route Name Prefix: sba.)
+    // Group Admin SBA (URL Prefix: /admin/sba, Route Name Prefix: sba.)
     Route::prefix('admin/sba')->name('sba.')->group(function () {
         
         // ----------------------------------------------------------------------
         // A. DASHBOARD & UTILITY
         // ----------------------------------------------------------------------
         Route::get('/', [SbaController::class, 'index'])->name('index');
-        Route::get('/get-mapel-by-guru/{guru_id}', [SbaController::class, 'getMapelByGuru'])->name('get-mapel-by-guru');
+        Route::get('/check-kode', [SbaController::class, 'checkKode'])->name('check_kode');
 
         // ----------------------------------------------------------------------
-        // B. MANAJEMEN UJIAN & BANK SOAL (CRUD)
+        // B. MANAJEMEN UJIAN & BANK SOAL (CRUD + IMPORT / EXPORT EXCEL)
         // ----------------------------------------------------------------------
         Route::get('/create', [SbaController::class, 'create'])->name('create');
         Route::post('/store', [SbaController::class, 'store'])->name('store');
@@ -35,6 +35,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/{id}/duplicate', [SbaController::class, 'duplicate'])->name('duplicate');
         Route::get('/template-soal', [SbaController::class, 'downloadTemplateSoal'])->name('soal.template');
         Route::post('/import-soal-preview', [SbaController::class, 'importSoalPreview'])->name('soal.import_preview');
+        Route::post('/export-soal', [SbaController::class, 'exportSoalExcel'])->name('soal.export');
         
         // Endpoint AJAX Hapus Single Soal + Gambar Media
         Route::delete('/soal/{soal_id}', [SbaController::class, 'destroySoal'])->name('soal.destroy');
@@ -44,9 +45,10 @@ Route::middleware(['auth'])->group(function () {
         // ----------------------------------------------------------------------
         Route::get('/{uji_id}/hasil', [SbaController::class, 'hasilIndex'])->name('hasil.index');
         Route::get('/{uji_id}/hasil/export', [SbaController::class, 'exportHasil'])->name('hasil.export');
+        Route::post('/{uji_id}/hasil/bulk-refresh', [SbaController::class, 'bulkRefreshNilai'])->name('hasil.bulk_refresh');
 
         // ----------------------------------------------------------------------
-        // D. DETAIL ASESI & PENILAIAN ESAI
+        // D. DETAIL PESERTA & PENILAIAN ESAI
         // ----------------------------------------------------------------------
         Route::get('/hasil/{hasil_id}/detail', [SbaController::class, 'hasilDetail'])->name('hasil.detail');
         Route::post('/hasil/{hasil_id}/simpan-nilai', [SbaController::class, 'simpanPenilaianEsai'])->name('hasil.simpan_nilai');
@@ -74,7 +76,7 @@ Route::prefix('sba')->group(function () {
     Route::get('/', [SbaUjiController::class, 'portal'])->name('sba.portal');
     Route::post('/process', [SbaUjiController::class, 'processPortal'])->name('sba.portal.process');
 
-    // B. Ruang CBT Engine & Quicklink (/sba/asesmen/KODEUJI tetap dipertahankan)
+    // B. Ruang CBT Engine & Quicklink (/sba/asesmen/KODEUJI)
     Route::get('/asesmen/{kode_uji}', [SbaUjiController::class, 'halamanUji'])->name('sba.uji.halaman');
 
     // C. Endpoint AJAX In-Game (Menggunakan uji_id agar kebal saat kode_uji diubah di tengah sesi)

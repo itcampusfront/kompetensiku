@@ -28,15 +28,15 @@ class Uji extends Model
     ];
 
     protected $casts = [
-        'waktu_mulai' => 'datetime',
-        'waktu_selesai' => 'datetime',
-        'acak_soal' => 'boolean',
-        'open_book' => 'boolean',
-        'tampilkan_nilai' => 'boolean',
-        'buka_untuk_umum' => 'boolean',
-        'ulangi_jika_gagal' => 'boolean',
+        'waktu_mulai'           => 'datetime',
+        'waktu_selesai'         => 'datetime',
+        'acak_soal'             => 'boolean',
+        'open_book'             => 'boolean',
+        'tampilkan_nilai'       => 'boolean',
+        'buka_untuk_umum'       => 'boolean',
+        'ulangi_jika_gagal'     => 'boolean',
         'toleransi_pelanggaran' => 'integer',
-        'maksimal_percobaan' => 'integer',
+        'maksimal_percobaan'    => 'integer',
     ];
 
     public function setDurasiMenitAttribute($value)
@@ -60,29 +60,30 @@ class Uji extends Model
         return $this->hasMany(UjiHasil::class, 'uji_id')->where('status_pengerjaan', 'selesai');
     }
 
-    // Relasi ke Pembuat Asesmen (Author)
+    // Relasi ke Pembuat Asesmen (Author) - disesuaikan dengan primary key tabel users: id_user
     public function author()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id', 'id_user');
     }
 
     /**
-     * Cek apakah asesmen memiliki soal esai atau soal PG/PGK yang belum memiliki kunci jawaban
+     * Cek apakah asesmen memiliki soal esai tanpa kunci atau soal PG/PGK tanpa kunci jawaban
      */
     public function butuhPenilaianManual(): bool
     {
         $soals = $this->relationLoaded('soals') ? $this->soals : $this->soals()->get();
 
         foreach ($soals as $soal) {
-            if ($soal->tipe === 'esai') {
-                return true;
+            if ($soal->tipe === 'benar_salah') {
+                continue;
             }
 
-            if (in_array($soal->tipe, ['pg', 'pg_kompleks'])) {
-                $kunci = is_array($soal->kunci_jawaban) ? array_filter($soal->kunci_jawaban, fn($v) => $v !== null && $v !== '') : [];
-                if (empty($kunci)) {
-                    return true;
-                }
+            $kunci = is_array($soal->kunci_jawaban)
+                ? array_filter($soal->kunci_jawaban, fn($v) => trim((string) $v) !== '')
+                : [];
+
+            if (in_array($soal->tipe, ['esai', 'pg', 'pg_kompleks'], true) && empty($kunci)) {
+                return true;
             }
         }
 

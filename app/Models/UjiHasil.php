@@ -22,9 +22,8 @@ class UjiHasil extends Model
         'catatan_pelanggaran',
     ];
 
-    // PENTING: Cast kolom waktu menjadi datetime (Carbon)
     protected $casts = [
-        'waktu_mulai' => 'datetime',
+        'waktu_mulai'   => 'datetime',
         'waktu_selesai' => 'datetime',
     ];
 
@@ -35,7 +34,7 @@ class UjiHasil extends Model
 
     public function asesi()
     {
-        return $this->belongsTo(User::class, 'asesi_id');
+        return $this->belongsTo(User::class, 'asesi_id', 'id_user');
     }
 
     public function jawabans()
@@ -52,7 +51,6 @@ class UjiHasil extends Model
             return $this->status_pengerjaan === 'berlangsung' ? 'Sedang Berjalan' : '-';
         }
 
-        // Kalkulasi total selisih detik secara presisi
         $totalDetik = $this->waktu_mulai->diffInSeconds($this->waktu_selesai);
 
         $jam = floor($totalDetik / 3600);
