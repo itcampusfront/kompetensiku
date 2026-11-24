@@ -763,7 +763,7 @@
                                         <input type="hidden" class="opsi-remove-media" value="0">
                                         <small class="form-text text-muted mt-1" style="font-size: 11px;">Gambar opsi (Opsional: JPG, PNG, WEBP maks. 2MB)</small>
 
-                                        <div class="opsi-media-preview-container mt-2 position-relative d-inline-block d-none">
+                                        <div class="opsi-media-preview-container mt-2 position-relative d-none" style="width: fit-content;">
                                             <img src="" class="img-thumbnail opsi-media-preview-img" style="max-height: 95px; width: auto;" alt="Preview Opsi {{ $huruf }}">
                                             <button type="button" class="btn btn-danger btn-sm position-absolute btn-delete-opsi-media" style="top: 4px; right: 4px; padding: 1px 6px;" title="Hapus Gambar Opsi {{ $huruf }}">
                                                 <i class="fa fa-times"></i>
